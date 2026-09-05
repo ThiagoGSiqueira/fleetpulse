@@ -11,13 +11,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
+
 @Table(name = "drivers")
 public class Driver {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -32,5 +36,5 @@ public class Driver {
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DriverStatus status;
+    private DriverStatus status = DriverStatus.AVAILABLE;
 }

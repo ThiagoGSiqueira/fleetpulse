@@ -28,13 +28,13 @@ public class DriverService {
     }
 
     @Transactional(readOnly = true)
-    public Driver getDriverById(Long id) {
+    public Driver findDriverById(Long id) {
         return driverRepository.findById(id).orElseThrow();
     }
 
     @Transactional
     public void updateDriver(Long id, Driver updateD) {
-        Driver d = getDriverById(id);
+        Driver d = findDriverById(id);
         d.setName(updateD.getName());
         d.setCnhNumber(updateD.getCnhNumber());
         d.setStatus(updateD.getStatus());
