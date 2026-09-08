@@ -45,11 +45,16 @@ public class DriverService {
     }
 
     @Transactional
-    public void updateDriver(Long id, Driver updateD) {
-        Driver d = driverRepository.findById(id).orElseThrow();
-        d.setName(updateD.getName());
-        d.setCnhNumber(updateD.getCnhNumber());
-        d.setStatus(updateD.getStatus());
+    public DriverResponseDto updateDriver(Long id, DriverRequestDto driverDto) {
+        Driver driverEntity = driverRepository.findById(id).orElseThrow();
+        if (driverDto.getName() != null) {
+            driverEntity.setName(driverDto.getName());
+        }
+        if (driverDto.getCnhNumber() != null) {
+            driverEntity.setCnhNumber(driverDto.getCnhNumber());
+        }
+
+        return driverMapper.toDto(driverEntity);
     }
 
     @Transactional

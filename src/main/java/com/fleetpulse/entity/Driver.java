@@ -29,7 +29,7 @@ import lombok.Setter;
 
 @Table(name = "drivers")
 public class Driver {
-
+    // Using SEQUENCE strategy to enable batching and improve performance with Spring Batch/Kafka over IDENTITY
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_seq_gen")
     @SequenceGenerator(
