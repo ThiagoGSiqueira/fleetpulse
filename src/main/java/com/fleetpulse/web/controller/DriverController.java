@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fleetpulse.entity.Driver;
 import com.fleetpulse.service.DriverService;
 import com.fleetpulse.web.dto.DriverRequestDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
@@ -34,16 +33,14 @@ public class DriverController {
 
     @GetMapping("/driver")
     public ResponseEntity<List<DriverResponseDto>> getAllDrivers() {
-        List<DriverResponseDto> driversDto = driverService.findAllDrivers().stream()
-        .map(driver -> new DriverResponseDto(driver.getId(), driver.getName(), driver.getCnhNumber(), driver.getStatus()))
-        .toList();
-        return ResponseEntity.ok(driversDto);
+        List<DriverResponseDto> response = driverService.findAllDrivers();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/driver/{id}")
     public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable Long id) {
-        Driver d = driverService.findDriverById(id);
-        return ResponseEntity.ok(new DriverResponseDto(d.getId(), d.getName(), d.getCnhNumber(), d.getStatus()));
+        DriverResponseDto response = driverService.findDriverById(id);
+        return ResponseEntity.ok(response);
     }
 }
  

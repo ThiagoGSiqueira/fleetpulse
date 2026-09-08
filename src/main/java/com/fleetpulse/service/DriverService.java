@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.entity.Driver;
 import com.fleetpulse.entity.DriverStatus;
+import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
 import com.fleetpulse.web.dto.DriverRequestDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
@@ -14,35 +15,38 @@ import com.fleetpulse.web.dto.DriverResponseDto;
 @Service
 public class DriverService {
     private final DriverRepository driverRepository;
+    private final DriverMapper driverMapper;
 
-    public DriverService(DriverRepository driverRepository) {
+    public DriverService(DriverRepository driverRepository, DriverMapper driverMapper) {
         this.driverRepository = driverRepository;
+        this.driverMapper = driverMapper;
     }
 
     // Create - Read - Update - Delete
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
-        Driver driverEntity = new Driver();
-        driverEntity.setName(driverDto.getName());
-        driverEntity.setCnhNumber(driverDto.getCnhNumber());
+        Driver driverEntity =  driverMapper.toEntity(driverDto);
         driverEntity.setStatus(DriverStatus.AVAILABLE);
         driverRepository.save(driverEntity);
-        return new DriverResponseDto(driverEntity.getId(), driverEntity.getName(), driverEntity.getCnhNumber(), driverEntity.getStatus());
+        return driverMapper.toDto(driverEntity);
     }
 
     @Transactional(readOnly = true)
-    public List<Driver> findAllDrivers() {
-        return driverRepository.findAll();
+    public List<DriverResponseDto> findAllDrivers() {
+        return driverRepository.findAll().stream()
+        .map(driverEntity -> driverMapper.toDto(driverEntity))
+        .toList();
     }
 
     @Transactional(readOnly = true)
-    public Driver findDriverById(Long id) {
-        return driverRepository.findById(id).orElseThrow();
+    public DriverResponseDto findDriverById(Long id) {
+        Driver driverEntity = driverRepository.findById(id).orElseThrow();
+        return driverMapper.toDto(driverEntity);
     }
 
     @Transactional
     public void updateDriver(Long id, Driver updateD) {
-        Driver d = findDriverById(id);
+        Driver d = driverRepository.findById(id).orElseThrow();
         d.setName(updateD.getName());
         d.setCnhNumber(updateD.getCnhNumber());
         d.setStatus(updateD.getStatus());
