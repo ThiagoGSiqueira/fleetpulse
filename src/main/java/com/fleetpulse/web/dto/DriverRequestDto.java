@@ -1,16 +1,12 @@
 package com.fleetpulse.web.dto;
 
-import com.fleetpulse.entity.DriverStatus;
-
 public class DriverRequestDto {
     private final String name;
     private final String cnhNumber;
-    private final DriverStatus status;
 
-    public DriverRequestDto(String name, String cnhNumber, DriverStatus status) {
+    public DriverRequestDto(String name, String cnhNumber) {
         this.name = name;
         this.cnhNumber = cnhNumber;
-        this.status = status;
     }
 
     public String getName() {
@@ -21,7 +17,4 @@ public class DriverRequestDto {
         return cnhNumber;
     }
 
-    public DriverStatus getStatus() {
-        return status;
-    }
 }

@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.entity.Driver;
+import com.fleetpulse.entity.DriverStatus;
 import com.fleetpulse.repository.DriverRepository;
+import com.fleetpulse.web.dto.DriverRequestDto;
+import com.fleetpulse.web.dto.DriverResponseDto;
 
 @Service
 public class DriverService {
@@ -18,8 +21,13 @@ public class DriverService {
 
     // Create - Read - Update - Delete
     @Transactional
-    public void createDriver(Driver driver) {
-        driverRepository.save(driver);
+    public DriverResponseDto createDriver(DriverRequestDto driverDto) {
+        Driver driverEntity = new Driver();
+        driverEntity.setName(driverDto.getName());
+        driverEntity.setCnhNumber(driverDto.getCnhNumber());
+        driverEntity.setStatus(DriverStatus.AVAILABLE);
+        driverRepository.save(driverEntity);
+        return new DriverResponseDto(driverEntity.getId(), driverEntity.getName(), driverEntity.getCnhNumber(), driverEntity.getStatus());
     }
 
     @Transactional(readOnly = true)
