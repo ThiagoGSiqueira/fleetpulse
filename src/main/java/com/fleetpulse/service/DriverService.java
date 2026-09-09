@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.entity.Driver;
 import com.fleetpulse.entity.DriverStatus;
+import com.fleetpulse.exception.CnhAlreadyExistsException;
 import com.fleetpulse.exception.DriverNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
@@ -28,6 +29,9 @@ public class DriverService {
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
         Driver driverEntity =  driverMapper.toEntity(driverDto);
+        if (driverRepository.existsByCnhNumber(driverDto.getCnhNumber())) {
+            throw new CnhAlreadyExistsException(driverDto.getCnhNumber());
+        }
         driverEntity.setStatus(DriverStatus.AVAILABLE);
         driverRepository.save(driverEntity);
         return driverMapper.toDto(driverEntity);

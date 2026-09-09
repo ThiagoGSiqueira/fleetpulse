@@ -2,6 +2,7 @@ package com.fleetpulse.exception;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,6 +38,20 @@ public class GlobalExceptionHandler {
         String detail = String.format("The parameter '%s' received the value '%s', but expected type '%s'.", 
                               paramName, providedValue, expectedType);        
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
+        return pd;
+    }
+
+    @ExceptionHandler(CnhAlreadyExistsException.class) 
+    public ProblemDetail cnhAlreadyExistsException(CnhAlreadyExistsException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+
+        return pd;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ex.printStackTrace();
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "The operation could not be completed due to a conflict with existing data.");
         return pd;
     }
 
