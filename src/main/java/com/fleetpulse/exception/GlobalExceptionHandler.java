@@ -32,11 +32,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         String paramName = ex.getName();
-        String providedValue = ex.getValue().toString();
+        String providedValue = ex.getValue() != null ? ex.getValue().toString() : "No value provided.";
         String expectedType = ex.getRequiredType().getSimpleName();
         String detail = String.format("The parameter '%s' received the value '%s', but expected type '%s'.", 
                               paramName, providedValue, expectedType);        
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
+        return pd;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail genericException(Exception ex) {
+        ex.printStackTrace();
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again later.");
         return pd;
     }
 }
