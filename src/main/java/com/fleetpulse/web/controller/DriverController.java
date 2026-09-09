@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.DriverService;
 import com.fleetpulse.web.dto.DriverRequestDto;
+import com.fleetpulse.web.dto.DriverRequestUpdateDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class DriverController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriverResponseDto> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestDto driverDto) {
+    public ResponseEntity<DriverResponseDto> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDto driverDto) {
         DriverResponseDto response = driverService.updateDriver(id, driverDto);
         return ResponseEntity.ok(response);
     }

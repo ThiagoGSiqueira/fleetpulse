@@ -10,6 +10,7 @@ import com.fleetpulse.entity.DriverStatus;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
 import com.fleetpulse.web.dto.DriverRequestDto;
+import com.fleetpulse.web.dto.DriverRequestUpdateDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 
 @Service
@@ -45,7 +46,7 @@ public class DriverService {
     }
 
     @Transactional
-    public DriverResponseDto updateDriver(Long id, DriverRequestDto driverDto) {
+    public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
         Driver driverEntity = driverRepository.findById(id).orElseThrow();
         if (driverDto.getName() != null) {
             driverEntity.setName(driverDto.getName());

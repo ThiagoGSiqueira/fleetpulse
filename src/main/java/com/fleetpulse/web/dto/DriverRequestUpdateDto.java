@@ -1,14 +1,11 @@
 package com.fleetpulse.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
+public class DriverRequestUpdateDto {
 
-public class DriverRequestDto {
-    @NotBlank 
-    private final String name;
-    @NotBlank 
+    private final String name; 
     private final String cnhNumber;
 
-    public DriverRequestDto(String name, String cnhNumber) {
+    public DriverRequestUpdateDto(String name, String cnhNumber) {
         this.name = name;
         this.cnhNumber = cnhNumber;
     }
@@ -22,3 +19,5 @@ public class DriverRequestDto {
     }
 
 }
+
+
