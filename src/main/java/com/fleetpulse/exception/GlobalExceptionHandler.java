@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
         .map(error -> error.getField() +": " + error.getDefaultMessage())
         .toList();
         pd.setProperty("errors", listErrors);
+
         return pd;
     }
 
@@ -37,14 +38,15 @@ public class GlobalExceptionHandler {
         String expectedType = ex.getRequiredType().getSimpleName();
         String detail = String.format("The parameter '%s' received the value '%s', but expected type '%s'.", 
                               paramName, providedValue, expectedType);        
+                              
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
+
         return pd;
     }
 
     @ExceptionHandler(CnhAlreadyExistsException.class) 
     public ProblemDetail cnhAlreadyExistsException(CnhAlreadyExistsException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-
         return pd;
     }
 
