@@ -39,10 +39,11 @@ public class Driver {
     )
     private Long id;
 
+    @Column(nullable = false, length = 40)
     @NotBlank
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 6)
     @NotBlank
     private String cnhNumber;
 
