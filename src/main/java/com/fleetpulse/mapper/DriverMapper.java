@@ -15,8 +15,8 @@ public class DriverMapper {
 
     public Driver toEntity(DriverRequestDto driverDto) {
         Driver driverEntity = new Driver();
-        driverEntity.setName(driverDto.getName());
-        driverEntity.setCnhNumber(driverDto.getCnhNumber());
+        driverEntity.setName(driverDto.name());
+        driverEntity.setCnhNumber(driverDto.cnhNumber());
 
         return driverEntity;
     }

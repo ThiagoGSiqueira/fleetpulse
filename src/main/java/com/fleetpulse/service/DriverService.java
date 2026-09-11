@@ -29,8 +29,8 @@ public class DriverService {
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
         Driver driverEntity =  driverMapper.toEntity(driverDto);
-        if (driverRepository.existsByCnhNumber(driverDto.getCnhNumber())) {
-            throw new CnhAlreadyExistsException(driverDto.getCnhNumber());
+        if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
+            throw new CnhAlreadyExistsException(driverDto.cnhNumber());
         }
         driverEntity.setStatus(DriverStatus.AVAILABLE);
         driverRepository.save(driverEntity);
@@ -53,11 +53,11 @@ public class DriverService {
     @Transactional
     public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
         Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new DriverNotFoundException(id));
-        if (driverDto.getName() != null) {
-            driverEntity.setName(driverDto.getName());
+        if (driverDto.name() != null) {
+            driverEntity.setName(driverDto.name());
         }
-        if (driverDto.getCnhNumber() != null) {
-            driverEntity.setCnhNumber(driverDto.getCnhNumber());
+        if (driverDto.cnhNumber() != null) {
+            driverEntity.setCnhNumber(driverDto.cnhNumber());
         }
         driverRepository.save(driverEntity);
         return driverMapper.toDto(driverEntity);
