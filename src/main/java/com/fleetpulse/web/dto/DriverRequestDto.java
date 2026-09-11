@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record DriverRequestDto(
-    @NotBlank 
+    @NotBlank(message = "Name is required.")
     @Size(min = 3, max = 40)
     String name, 
     @NotBlank(message = "CNH is required.")
