@@ -1,6 +1,7 @@
 package com.fleetpulse.exception;
 
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,8 +48,8 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    @ExceptionHandler(CnhAlreadyExistsException.class)
-    public ProblemDetail cnhAlreadyExistsException(CnhAlreadyExistsException ex) {
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ProblemDetail resourceAlreadyExists(ResourceAlreadyExistsException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         return pd;
     }

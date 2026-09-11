@@ -7,5 +7,5 @@ import com.fleetpulse.domain.Vehicle;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long>{
-
+    boolean existsByLicensePlate(String licensePlate);
 }
