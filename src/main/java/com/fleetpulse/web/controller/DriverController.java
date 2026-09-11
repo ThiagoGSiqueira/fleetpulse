@@ -19,17 +19,15 @@ import com.fleetpulse.web.dto.DriverRequestUpdateDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor 
 @RestController
 @RequestMapping("/drivers")
 public class DriverController {
     
     private final DriverService driverService;
-
-    public DriverController(DriverService driverService) {
-        this.driverService = driverService;
-    }
-    
+  
     @PostMapping
     public ResponseEntity<DriverResponseDto> createDriver(@Valid @RequestBody DriverRequestDto driverDto) {
         DriverResponseDto response = driverService.createDriver(driverDto);

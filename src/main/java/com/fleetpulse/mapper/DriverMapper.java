@@ -2,7 +2,7 @@ package com.fleetpulse.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.fleetpulse.entity.Driver;
+import com.fleetpulse.domain.Driver;
 import com.fleetpulse.web.dto.DriverRequestDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 

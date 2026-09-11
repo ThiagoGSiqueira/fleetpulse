@@ -1,4 +1,4 @@
-package com.fleetpulse.entity;
+package com.fleetpulse.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

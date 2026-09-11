@@ -1,4 +1,4 @@
-package com.fleetpulse.entity;
+package com.fleetpulse.domain;
 
 public enum VehicleStatus {
     AVAILABLE,

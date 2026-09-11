@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fleetpulse.entity.Driver;
-import com.fleetpulse.entity.DriverStatus;
+import com.fleetpulse.domain.Driver;
+import com.fleetpulse.domain.DriverStatus;
 import com.fleetpulse.exception.CnhAlreadyExistsException;
 import com.fleetpulse.exception.DriverNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
@@ -15,15 +15,13 @@ import com.fleetpulse.web.dto.DriverRequestDto;
 import com.fleetpulse.web.dto.DriverRequestUpdateDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor 
 @Service
 public class DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
-
-    public DriverService(DriverRepository driverRepository, DriverMapper driverMapper) {
-        this.driverRepository = driverRepository;
-        this.driverMapper = driverMapper;
-    }
 
     // Create - Read - Update - Delete
     @Transactional
