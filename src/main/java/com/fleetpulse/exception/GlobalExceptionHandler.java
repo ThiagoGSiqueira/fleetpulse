@@ -29,12 +29,6 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    @ExceptionHandler(DriverNotFoundException.class)
-    public ProblemDetail driverNotFoundException(DriverNotFoundException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        return pd;
-    }
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         String paramName = ex.getName();
@@ -48,8 +42,14 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail resourceNotFoundException(ResourceNotFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        return pd;
+    }
+
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ProblemDetail resourceAlreadyExists(ResourceAlreadyExistsException ex) {
+    public ProblemDetail resourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         return pd;
     }

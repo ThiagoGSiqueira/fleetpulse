@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.domain.VehicleStatus;
 import com.fleetpulse.exception.ResourceAlreadyExistsException;
+import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
 import com.fleetpulse.repository.VehicleRepository;
 import com.fleetpulse.web.dto.VehicleRequestDto;
@@ -45,7 +46,7 @@ public class VehicleService {
 
     @Transactional(readOnly = true)
     public VehicleResponseDto findVehicleById(Long id) {
-        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow();
+        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
         return vehicleMapper.toDto(vehicleEntity);
     }
 }

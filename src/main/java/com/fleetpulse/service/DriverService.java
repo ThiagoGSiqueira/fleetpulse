@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.DriverStatus;
-import com.fleetpulse.exception.DriverNotFoundException;
 import com.fleetpulse.exception.ResourceAlreadyExistsException;
+import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
 import com.fleetpulse.web.dto.DriverRequestDto;
@@ -44,13 +44,13 @@ public class DriverService {
 
     @Transactional(readOnly = true)
     public DriverResponseDto findDriverById(Long id) {
-        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new DriverNotFoundException(id));
+        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
         return driverMapper.toDto(driverEntity);
     }
 
     @Transactional
     public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
-        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new DriverNotFoundException(id));
+        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
         if (driverDto.name() != null) {
             driverEntity.setName(driverDto.name());
         }
@@ -64,7 +64,7 @@ public class DriverService {
     @Transactional
     public void deleteDriver(Long id) {
         if (!driverRepository.existsById(id)) {
-            throw new DriverNotFoundException(id);
+            throw new ResourceNotFoundException("Driver", id.toString());
         }
         driverRepository.deleteById(id);
     }
