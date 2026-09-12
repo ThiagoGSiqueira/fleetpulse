@@ -13,6 +13,7 @@ import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
 import com.fleetpulse.repository.VehicleRepository;
 import com.fleetpulse.web.dto.VehicleRequestDto;
+import com.fleetpulse.web.dto.VehicleRequestUpdateDto;
 import com.fleetpulse.web.dto.VehicleResponseDto;
 
 import jakarta.validation.Valid;
@@ -47,6 +48,19 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public VehicleResponseDto findVehicleById(Long id) {
         Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        return vehicleMapper.toDto(vehicleEntity);
+    }
+
+    @Transactional
+    public VehicleResponseDto updateVehicle(Long id, VehicleRequestUpdateDto vehicleDto) {
+        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        if (vehicleDto.licensePlate() != null) {
+            vehicleEntity.setLicensePlate(vehicleDto.licensePlate());
+        }
+        if (vehicleDto.model() != null) {
+            vehicleEntity.setModel(vehicleDto.model());
+        }
+        vehicleRepository.save(vehicleEntity);
         return vehicleMapper.toDto(vehicleEntity);
     }
 }

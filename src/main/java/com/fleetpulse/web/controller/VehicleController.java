@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.VehicleService;
 import com.fleetpulse.web.dto.VehicleRequestDto;
+import com.fleetpulse.web.dto.VehicleRequestUpdateDto;
 import com.fleetpulse.web.dto.VehicleResponseDto;
 
 import jakarta.validation.Valid;
@@ -39,6 +41,12 @@ public class VehicleController {
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDto> getVehicleById(@PathVariable Long id) {
         VehicleResponseDto response = vehicleService.findVehicleById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleResponseDto> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDto vehicleDto) {
+        VehicleResponseDto response = vehicleService.updateVehicle(id, vehicleDto);
         return ResponseEntity.ok(response);
     }
 }
