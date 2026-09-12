@@ -63,4 +63,12 @@ public class VehicleService {
         vehicleRepository.save(vehicleEntity);
         return vehicleMapper.toDto(vehicleEntity);
     }
+
+    @Transactional 
+    public void deleteVehicle(Long id) {
+        if (!vehicleRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Vehicle", id.toString());
+        }
+        vehicleRepository.deleteById(id);
+    }
 }
