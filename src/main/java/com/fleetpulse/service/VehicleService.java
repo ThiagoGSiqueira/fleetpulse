@@ -42,4 +42,10 @@ public class VehicleService {
         .map(vehicle -> vehicleMapper.toDto(vehicle))
         .toList();
     }
+
+    @Transactional(readOnly = true)
+    public VehicleResponseDto findVehicleById(Long id) {
+        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow();
+        return vehicleMapper.toDto(vehicleEntity);
+    }
 }
