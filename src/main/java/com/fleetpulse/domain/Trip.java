@@ -2,8 +2,13 @@ package com.fleetpulse.domain;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -21,11 +26,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+
 @Table(name = "trips")
 public class Trip {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @CreatedDate 
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate 
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
@@ -35,19 +49,50 @@ public class Trip {
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @NotBlank
-    private String origin;
-    
-    @NotBlank
-    private String destination;
+    @NotBlank 
+    @Column(nullable = false, length = 10)
+    private String originZipCode;
 
-    @NotNull
-    private LocalDateTime startTime = LocalDateTime.now();
+    @NotBlank 
+    @Column(nullable = false, length = 120)
+    private String originAddress;
+
+    @NotNull 
+    @Column(nullable = false)
+    private Double originLatitude;
+
+    @NotNull 
+    @Column(nullable = false)
+    private Double originLongitude;
+
+    @NotBlank 
+    @Column(nullable = false, length = 10)
+    private String destinationZipCode;
+
+    @NotBlank 
+    @Column(nullable = false, length = 120)
+    private String destinationAddress;
+
+    @NotNull 
+    @Column(nullable = false)
+    private Double destinationLatitude;
+
+    @NotNull 
+    @Column(nullable = false)
+    private Double  destinationLongitude;
+
+    @NotNull 
+    @Column(nullable = false)
+    private Double distanceInKm;
+
+    @NotNull  
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
-    @NotNull
+    @NotNull    
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TripStatus status;    
+    private TripStatus status;
 }
