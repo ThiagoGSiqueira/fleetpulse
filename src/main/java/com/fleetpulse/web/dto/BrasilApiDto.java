@@ -18,5 +18,17 @@ public record Coordinates(
     String latitude
 ) {}
 
+public String getFormattedAddress() {
+    return String.format("%s, %s, %s - %s, %s", street, neighborhood, city, state, cep);
+}
+
+public double getLatitude() {
+    return Double.parseDouble(location().coordinates().latitude);
+}
+
+public double getLongitude() {
+    return Double.parseDouble(location().coordinates().longitude);
+}
+
 }
 
