@@ -11,9 +11,9 @@ public record TripRequestDto(
         Long vehicleId,
         @Size(min = 8, max = 10)
         @NotBlank(message = "Origin Zip Code is required.") 
-        String OriginZipCode,
+        String originZipCode,
         @Size(min = 8, max = 10)
         @NotBlank(message = "Destination Zip Code is required.") 
-        String DestinationZipCode) {
+        String destinationZipCode) {
 
 }
