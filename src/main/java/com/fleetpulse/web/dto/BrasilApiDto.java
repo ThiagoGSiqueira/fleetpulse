@@ -9,13 +9,14 @@ public record BrasilApiDto(
     Location location
 ) {
     
-}
-
-record Location(
+public record Location(
     Coordinates coordinates
 ) {}
 
-record Coordinates(
+public record Coordinates(
     String longitude,
     String latitude
 ) {}
+
+}
+
