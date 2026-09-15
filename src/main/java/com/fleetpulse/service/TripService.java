@@ -1,20 +1,16 @@
 package com.fleetpulse.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
-import com.fleetpulse.domain.TripStatus;
 import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.TripMapper;
 import com.fleetpulse.repository.DriverRepository;
 import com.fleetpulse.repository.TripRepository;
 import com.fleetpulse.repository.VehicleRepository;
-import com.fleetpulse.util.GeoUtils;
 import com.fleetpulse.web.dto.BrasilApiDto;
 import com.fleetpulse.web.dto.TripRequestDto;
 import com.fleetpulse.web.dto.TripResponseDto;

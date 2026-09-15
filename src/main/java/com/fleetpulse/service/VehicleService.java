@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fleetpulse.domain.Vehicle;
-import com.fleetpulse.domain.VehicleStatus;
 import com.fleetpulse.exception.ResourceAlreadyExistsException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
@@ -32,7 +31,6 @@ public class VehicleService {
         if(vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())){
             throw new ResourceAlreadyExistsException("Vehicle", "License Plate", vehicleDto.licensePlate());
         }
-        vehicleEntity.setStatus(VehicleStatus.AVAILABLE);
         vehicleRepository.save(vehicleEntity);
         return vehicleMapper.toDto(vehicleEntity);
     }
