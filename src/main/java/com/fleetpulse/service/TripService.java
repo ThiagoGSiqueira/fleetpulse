@@ -36,31 +36,12 @@ public class TripService {
                 .orElseThrow(() -> new ResourceNotFoundException("Driver", tripDto.driverId().toString()));
         Vehicle vehicleEntity = vehicleRepository.findById(tripDto.vehicleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", tripDto.vehicleId().toString()));
+
         BrasilApiDto originBrasilApiAddress = brasilApiService.searchAddress(tripDto.OriginZipCode());
         BrasilApiDto destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.DestinationZipCode());
-        Trip tripEntity = tripMapper.toEntity(tripDto, driverEntity, vehicleEntity);
-        tripEntity.setStartTime(LocalDateTime.now());
-        tripEntity.setStatus(TripStatus.IN_PROGRESS);
-        tripEntity.setOriginAddress(String.format("%s, %s, %s - %s, %s", originBrasilApiAddress.street(),
-                originBrasilApiAddress.neighborhood(), originBrasilApiAddress.city(), originBrasilApiAddress.state(),
-                originBrasilApiAddress.cep()));
-        tripEntity.setOriginLatitude(Double.parseDouble(originBrasilApiAddress.location().coordinates().latitude()));
-        tripEntity.setOriginLongitude(Double.parseDouble(originBrasilApiAddress.location().coordinates().longitude()));
-        // Destination
-        tripEntity.setDestinationAddress(String.format("%s, %s, %s - %s, %s", destinationBrasilApiAddress.street(),
-                destinationBrasilApiAddress.neighborhood(), destinationBrasilApiAddress.city(),
-                destinationBrasilApiAddress.state(), destinationBrasilApiAddress.cep()));
-        tripEntity.setDestinationLatitude(
-                Double.parseDouble(destinationBrasilApiAddress.location().coordinates().latitude()));
-        tripEntity.setDestinationLongitude(
-                Double.parseDouble(destinationBrasilApiAddress.location().coordinates().longitude()));
-        double distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(
-                Double.parseDouble(originBrasilApiAddress.location().coordinates().latitude()),
-                Double.parseDouble(originBrasilApiAddress.location().coordinates().longitude()),
-                Double.parseDouble(destinationBrasilApiAddress.location().coordinates().latitude()),
-                Double.parseDouble(destinationBrasilApiAddress.location().coordinates().longitude()));
-        tripEntity.setDistanceInKm(distanceInKm);
-
+        
+        Trip tripEntity = tripMapper.toEntity(tripDto, driverEntity, vehicleEntity, originBrasilApiAddress, destinationBrasilApiAddress);
+        
         tripRepository.save(tripEntity);
         return tripMapper.toDto(tripEntity);
     }
