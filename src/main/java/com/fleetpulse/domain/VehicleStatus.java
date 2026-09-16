@@ -1,7 +1,8 @@
 package com.fleetpulse.domain;
 
 public enum VehicleStatus {
+    INACTIVE,
     AVAILABLE,
-    IN_TRIP,
+    BUSY,
     MAINTENANCE
 }

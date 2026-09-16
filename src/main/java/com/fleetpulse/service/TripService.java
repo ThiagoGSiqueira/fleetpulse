@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
+import com.fleetpulse.domain.TripStatus;
 import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
@@ -72,4 +73,5 @@ public class TripService {
         }
         tripRepository.deleteById(id);
     }
+
 }

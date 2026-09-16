@@ -41,7 +41,7 @@ public class TripMapper {
                 tripEntity.setDestinationLatitude(destinationBrasilApiAddress.getLatitude());
                 tripEntity.setDestinationLongitude(destinationBrasilApiAddress.getLongitude());
                 tripEntity.setStartTime(LocalDateTime.now());
-                tripEntity.setStatus(TripStatus.IN_PROGRESS);
+                tripEntity.setStatus(TripStatus.PENDING);
                 double distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(originBrasilApiAddress.getLatitude(), originBrasilApiAddress.getLongitude(),
         destinationBrasilApiAddress.getLatitude(), destinationBrasilApiAddress.getLongitude());
                 tripEntity.setDistanceInKm(distanceInKm);

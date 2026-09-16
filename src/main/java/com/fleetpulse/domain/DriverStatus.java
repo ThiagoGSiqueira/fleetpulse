@@ -1,7 +1,8 @@
 package com.fleetpulse.domain;
 
 public enum DriverStatus {
+    INACTIVE,
     AVAILABLE,
-    ON_TRIP,
+    BUSY,
     OFF_DUTY
 }
