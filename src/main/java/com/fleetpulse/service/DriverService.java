@@ -16,7 +16,7 @@ import com.fleetpulse.web.dto.DriverResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 @Service
 public class DriverService {
     private final DriverRepository driverRepository;
@@ -25,7 +25,7 @@ public class DriverService {
     // Create - Read - Update - Delete
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
-        Driver driverEntity =  driverMapper.toEntity(driverDto);
+        Driver driverEntity = driverMapper.toEntity(driverDto);
         if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
             throw new ResourceAlreadyExistsException("Driver", "CNH", driverDto.cnhNumber());
         }
@@ -36,19 +36,21 @@ public class DriverService {
     @Transactional(readOnly = true)
     public List<DriverResponseDto> findAllDrivers() {
         return driverRepository.findAll().stream()
-        .map(driverEntity -> driverMapper.toDto(driverEntity))
-        .toList();
+                .map(driverEntity -> driverMapper.toDto(driverEntity))
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public DriverResponseDto findDriverById(Long id) {
-        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
+        Driver driverEntity = driverRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
         return driverMapper.toDto(driverEntity);
     }
 
     @Transactional
     public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
-        Driver driverEntity = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
+        Driver driverEntity = driverRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
         if (driverDto.name() != null) {
             driverEntity.setName(driverDto.name());
         }
@@ -65,5 +67,11 @@ public class DriverService {
             throw new ResourceNotFoundException("Driver", id.toString());
         }
         driverRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Driver findDriverEntityById(Long id) {
+        return driverRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
     }
 }

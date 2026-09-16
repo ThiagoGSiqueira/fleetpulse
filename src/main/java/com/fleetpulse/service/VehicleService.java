@@ -69,4 +69,9 @@ public class VehicleService {
         }
         vehicleRepository.deleteById(id);
     }
+
+    @Transactional 
+    public Vehicle findVehicleEntityById(Long id) {
+        return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+    }
 }
