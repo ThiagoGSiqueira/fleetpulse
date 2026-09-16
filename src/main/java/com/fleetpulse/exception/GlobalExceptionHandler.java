@@ -54,6 +54,12 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(ResourceAlreadyDisabledException.class)
+    public ProblemDetail resourceAlreadyDisabledException(ResourceAlreadyDisabledException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return pd;
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
         log.error("Data integrity error.", ex);

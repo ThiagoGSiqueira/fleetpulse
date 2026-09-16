@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fleetpulse.exception.ResourceAlreadyDisabledException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -22,11 +24,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 
@@ -71,5 +71,12 @@ public class Driver {
         if (newCnhNumber != null) {
             this.cnhNumber = newCnhNumber;
         }
+    }
+
+    public void deactivate() {
+        if (this.status == DriverStatus.INACTIVE) {
+            throw new ResourceAlreadyDisabledException("Driver", "CNH", this.cnhNumber);
+        }
+        this.status = DriverStatus.INACTIVE;
     }
 }

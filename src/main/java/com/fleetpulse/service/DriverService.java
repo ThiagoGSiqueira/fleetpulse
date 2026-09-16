@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.domain.Driver;
-import com.fleetpulse.domain.DriverStatus;
 import com.fleetpulse.exception.ResourceAlreadyExistsException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
@@ -26,10 +25,10 @@ public class DriverService {
     // Create - Read - Update - Delete
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
-        Driver driverEntity = driverMapper.toEntity(driverDto);
         if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
             throw new ResourceAlreadyExistsException("Driver", "CNH", driverDto.cnhNumber());
         }
+        Driver driverEntity = driverMapper.toEntity(driverDto);
         driverRepository.save(driverEntity);
         return driverMapper.toDto(driverEntity);
     }
@@ -58,7 +57,7 @@ public class DriverService {
     @Transactional
     public void deleteDriver(Long id) {
         Driver driverEntity = findDriverEntityById(id);
-        driverEntity.setStatus(DriverStatus.INACTIVE);
+        driverEntity.deactivate();
         driverRepository.save(driverEntity);
     }
 
