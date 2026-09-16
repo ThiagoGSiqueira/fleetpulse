@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
 import com.fleetpulse.domain.Vehicle;
+import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.mapper.TripMapper;
 import com.fleetpulse.mapper.VehicleMapper;
@@ -33,7 +34,6 @@ public class TripService {
 
     // Create - Read - Update - Delete
 
-
     @Transactional
     public TripResponseDto createTrip(TripRequestDto tripDto) {
         Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
@@ -57,5 +57,11 @@ public class TripService {
         return tripRepository.findAll().stream()
         .map(tripEntity -> tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle())))
         .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public TripResponseDto findTripById(Long id) {
+        Trip tripEntity = tripRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Trip", id.toString()));
+        return tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle()));
     }
 }
