@@ -50,12 +50,7 @@ public class DriverService {
     @Transactional
     public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
         Driver driverEntity = findDriverEntityById(id);
-        if (driverDto.name() != null) {
-            driverEntity.setName(driverDto.name());
-        }
-        if (driverDto.cnhNumber() != null) {
-            driverEntity.setCnhNumber(driverDto.cnhNumber());
-        }
+        driverEntity.updatePersonalData(driverDto.name(), driverDto.cnhNumber());
         driverRepository.save(driverEntity);
         return driverMapper.toDto(driverEntity);
     }

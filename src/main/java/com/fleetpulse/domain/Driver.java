@@ -17,6 +17,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,7 @@ import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter 
+@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 
@@ -39,10 +40,12 @@ public class Driver {
     private Long id;
 
     @Column(nullable = false, length = 40)
+    @Size(min = 3, max = 40)
     @NotBlank
     private String name;
 
     @Column(unique = true, nullable = false, length = 6)
+    @Size(min = 6, max = 6)
     @NotBlank
     private String cnhNumber;
 
@@ -54,11 +57,19 @@ public class Driver {
     @CreatedDate
     private LocalDateTime creationDate;
 
-    @Builder 
+    @Builder
     public Driver(String name, String cnhNumber) {
         this.name = name;
         this.cnhNumber = cnhNumber;
         this.status = DriverStatus.AVAILABLE;
     }
 
+    public void updatePersonalData(String newName, String newCnhNumber) {
+        if (newName != null) {
+            this.name = newName;
+        }
+        if (newCnhNumber != null) {
+            this.cnhNumber = newCnhNumber;
+        }
+    }
 }
