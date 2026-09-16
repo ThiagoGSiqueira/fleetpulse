@@ -3,7 +3,6 @@ package com.fleetpulse.mapper;
 import org.springframework.stereotype.Component;
 
 import com.fleetpulse.domain.Driver;
-import com.fleetpulse.domain.DriverStatus;
 import com.fleetpulse.web.dto.DriverRequestDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 
@@ -15,10 +14,10 @@ public class DriverMapper {
     }
 
     public Driver toEntity(DriverRequestDto driverDto) {
-        Driver driverEntity = new Driver();
-        driverEntity.setName(driverDto.name());
-        driverEntity.setCnhNumber(driverDto.cnhNumber());
-        driverEntity.setStatus(DriverStatus.AVAILABLE);
+        Driver driverEntity = Driver.builder()
+        .name(driverDto.name())
+        .cnhNumber(driverDto.cnhNumber())
+        .build();
 
         return driverEntity;
     }

@@ -17,26 +17,25 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
+@Setter 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 
 @Table(name = "drivers")
 public class Driver {
-    // Using SEQUENCE strategy to enable batching and improve performance with Spring Batch/Kafka over IDENTITY
+    // Using SEQUENCE strategy to enable batching and improve performance with
+    // Spring Batch/Kafka over IDENTITY
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_seq_gen")
-    @SequenceGenerator(
-        name = "driver_seq_gen",
-        sequenceName = "seq_driver",
-        allocationSize = 50
-    )
+    @SequenceGenerator(name = "driver_seq_gen", sequenceName = "seq_driver", allocationSize = 50)
     private Long id;
 
     @Column(nullable = false, length = 40)
@@ -50,8 +49,16 @@ public class Driver {
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DriverStatus status = DriverStatus.AVAILABLE;
+    private DriverStatus status;
 
-    @CreatedDate 
-    private LocalDateTime creationDate;    
+    @CreatedDate
+    private LocalDateTime creationDate;
+
+    @Builder 
+    public Driver(String name, String cnhNumber) {
+        this.name = name;
+        this.cnhNumber = cnhNumber;
+        this.status = DriverStatus.AVAILABLE;
+    }
+
 }
