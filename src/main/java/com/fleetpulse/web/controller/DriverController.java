@@ -53,8 +53,8 @@ public class DriverController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDriver(@PathVariable Long id) {
+    public ResponseEntity<Void> inactivateDriver(@PathVariable Long id) {
         driverService.deleteDriver(id);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 }

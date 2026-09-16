@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fleetpulse.domain.Vehicle;
+import com.fleetpulse.domain.VehicleStatus;
 import com.fleetpulse.exception.ResourceAlreadyExistsException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
@@ -65,7 +66,8 @@ public class VehicleService {
     @Transactional 
     public void deleteVehicle(Long id) {
         Vehicle vehicleEntity = findVehicleEntityById(id);
-        vehicleRepository.delete(vehicleEntity);
+        vehicleEntity.setStatus(VehicleStatus.INACTIVE);
+        vehicleRepository.save(vehicleEntity);
     }
 
     @Transactional(readOnly = true)
