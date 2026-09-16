@@ -42,15 +42,13 @@ public class DriverService {
 
     @Transactional(readOnly = true)
     public DriverResponseDto findDriverById(Long id) {
-        Driver driverEntity = driverRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
+        Driver driverEntity = findDriverEntityById(id);
         return driverMapper.toDto(driverEntity);
     }
 
     @Transactional
     public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
-        Driver driverEntity = driverRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
+        Driver driverEntity = findDriverEntityById(id);
         if (driverDto.name() != null) {
             driverEntity.setName(driverDto.name());
         }
@@ -63,10 +61,8 @@ public class DriverService {
 
     @Transactional
     public void deleteDriver(Long id) {
-        if (!driverRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Driver", id.toString());
-        }
-        driverRepository.deleteById(id);
+        Driver driverEntity = findDriverEntityById(id);
+        driverRepository.delete(driverEntity);
     }
 
     @Transactional(readOnly = true)

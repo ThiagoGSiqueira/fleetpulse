@@ -45,13 +45,13 @@ public class VehicleService {
 
     @Transactional(readOnly = true)
     public VehicleResponseDto findVehicleById(Long id) {
-        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        Vehicle vehicleEntity = findVehicleEntityById(id);
         return vehicleMapper.toDto(vehicleEntity);
     }
 
     @Transactional
     public VehicleResponseDto updateVehicle(Long id, VehicleRequestUpdateDto vehicleDto) {
-        Vehicle vehicleEntity = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        Vehicle vehicleEntity = findVehicleEntityById(id);
         if (vehicleDto.licensePlate() != null) {
             vehicleEntity.setLicensePlate(vehicleDto.licensePlate());
         }
@@ -64,14 +64,13 @@ public class VehicleService {
 
     @Transactional 
     public void deleteVehicle(Long id) {
-        if (!vehicleRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Vehicle", id.toString());
-        }
-        vehicleRepository.deleteById(id);
+        Vehicle vehicleEntity = findVehicleEntityById(id);
+        vehicleRepository.delete(vehicleEntity);
     }
 
-    @Transactional 
+    @Transactional(readOnly = true)
     public Vehicle findVehicleEntityById(Long id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        return vehicleRepository.findById(id).
+        orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
     }
 }
