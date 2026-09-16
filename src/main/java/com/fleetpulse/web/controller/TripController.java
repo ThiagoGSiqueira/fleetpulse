@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,9 +44,9 @@ public class TripController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
-        tripService.deleteById(id);
-        return ResponseEntity.status(204).build();
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<TripResponseDto> cancelTrip(@PathVariable Long id) {
+        TripResponseDto response = tripService.cancelTripById(id);
+        return ResponseEntity.ok(response);
     }
 }
