@@ -1,7 +1,10 @@
 package com.fleetpulse.web.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,5 +27,11 @@ public class TripController {
     public ResponseEntity<TripResponseDto> createTrip(@Valid @RequestBody TripRequestDto tripDto) {
         TripResponseDto response = tripService.createTrip(tripDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TripResponseDto>> getAllTrips() {
+        List<TripResponseDto> response = tripService.findAllTrips();
+        return ResponseEntity.ok(response);
     }
 }

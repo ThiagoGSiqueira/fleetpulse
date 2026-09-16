@@ -1,5 +1,7 @@
 package com.fleetpulse.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class TripService {
     private final VehicleMapper vehicleMapper;
     private final BrasilApiService brasilApiService;
 
+    // Create - Read - Update - Delete
+
+
     @Transactional
     public TripResponseDto createTrip(TripRequestDto tripDto) {
         Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
@@ -45,5 +50,12 @@ public class TripService {
 
         tripRepository.save(tripEntity);
         return tripMapper.toDto(tripEntity, driverDto, vehicleDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TripResponseDto> findAllTrips() {
+        return tripRepository.findAll().stream()
+        .map(tripEntity -> tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle())))
+        .toList();
     }
 }
