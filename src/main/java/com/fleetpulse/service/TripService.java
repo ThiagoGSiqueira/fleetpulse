@@ -64,4 +64,12 @@ public class TripService {
         Trip tripEntity = tripRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Trip", id.toString()));
         return tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle()));
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        if(!tripRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Vehicle", id.toString());
+        }
+        tripRepository.deleteById(id);
+    }
 }
