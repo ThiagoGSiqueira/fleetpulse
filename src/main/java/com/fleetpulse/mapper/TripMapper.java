@@ -15,9 +15,20 @@ import com.fleetpulse.web.dto.TripRequestDto;
 import com.fleetpulse.web.dto.TripResponseDto;
 import com.fleetpulse.web.dto.VehicleResponseDto;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor 
 @Component
 public class TripMapper {
-        public TripResponseDto toDto(Trip tripEntity, DriverResponseDto driverDto, VehicleResponseDto vehicleDto) {
+
+        private final DriverMapper driverMapper;
+        private final VehicleMapper vehicleMapper;
+
+        public TripResponseDto toDto(Trip tripEntity) {
+
+                DriverResponseDto driverDto = driverMapper.toDto(tripEntity.getDriver());
+                VehicleResponseDto vehicleDto = vehicleMapper.toDto(tripEntity.getVehicle());
+
                 return new TripResponseDto(tripEntity.getId(), driverDto, vehicleDto,
                                 tripEntity.getOriginZipCode(), tripEntity.getOriginAddress(),
                                 tripEntity.getDestinationZipCode(),

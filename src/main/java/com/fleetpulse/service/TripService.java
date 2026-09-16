@@ -9,15 +9,11 @@ import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
 import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.exception.ResourceNotFoundException;
-import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.mapper.TripMapper;
-import com.fleetpulse.mapper.VehicleMapper;
 import com.fleetpulse.repository.TripRepository;
 import com.fleetpulse.web.dto.BrasilApiDto;
-import com.fleetpulse.web.dto.DriverResponseDto;
 import com.fleetpulse.web.dto.TripRequestDto;
 import com.fleetpulse.web.dto.TripResponseDto;
-import com.fleetpulse.web.dto.VehicleResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +24,6 @@ public class TripService {
     private final DriverService driverService;
     private final VehicleService vehicleService;
     private final TripMapper tripMapper;
-    private final DriverMapper driverMapper;
-    private final VehicleMapper vehicleMapper;
     private final BrasilApiService brasilApiService;
 
     // Create - Read - Update - Delete
@@ -39,9 +33,6 @@ public class TripService {
         Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
         Vehicle vehicleEntity = vehicleService.findVehicleEntityById(tripDto.vehicleId());
 
-        DriverResponseDto driverDto = driverMapper.toDto(driverEntity);
-        VehicleResponseDto vehicleDto = vehicleMapper.toDto(vehicleEntity);
-
         BrasilApiDto originBrasilApiAddress = brasilApiService.searchAddress(tripDto.originZipCode());
         BrasilApiDto destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.destinationZipCode());
 
@@ -49,20 +40,20 @@ public class TripService {
                 destinationBrasilApiAddress);
 
         tripRepository.save(tripEntity);
-        return tripMapper.toDto(tripEntity, driverDto, vehicleDto);
+        return tripMapper.toDto(tripEntity);
     }
 
     @Transactional(readOnly = true)
     public List<TripResponseDto> findAllTrips() {
         return tripRepository.findAll().stream()
-        .map(tripEntity -> tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle())))
+        .map(tripEntity -> tripMapper.toDto(tripEntity))
         .toList();
     }
 
     @Transactional(readOnly = true)
     public TripResponseDto findTripById(Long id) {
         Trip tripEntity = findTripEntityById(id);
-        return tripMapper.toDto(tripEntity, driverMapper.toDto(tripEntity.getDriver()), vehicleMapper.toDto(tripEntity.getVehicle()));
+        return tripMapper.toDto(tripEntity);
     }
 
     @Transactional
@@ -71,7 +62,7 @@ public class TripService {
         tripRepository.delete(tripEntity);
     }
 
-    @Transactional 
+    @Transactional(readOnly = true) 
     public Trip findTripEntityById(Long id) {
         return tripRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Trip", id.toString()));
