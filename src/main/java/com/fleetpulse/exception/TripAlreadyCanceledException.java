@@ -1,7 +1,7 @@
 package com.fleetpulse.exception;
 
-public class TripAlreadyCancelledException extends RuntimeException{
-     public TripAlreadyCancelledException(String message) {
+public class TripAlreadyCanceledException extends RuntimeException{
+     public TripAlreadyCanceledException(String message) {
         super(message);
     }
 
@@ -12,7 +12,7 @@ public class TripAlreadyCancelledException extends RuntimeException{
      * @param value Value that the user tried
      */
 
-    public TripAlreadyCancelledException(String resourceName, String value) {
+    public TripAlreadyCanceledException(String resourceName, String value) {
         super(String.format("%s with ID: %s is already cancelled.", resourceName, value));
     }
 }

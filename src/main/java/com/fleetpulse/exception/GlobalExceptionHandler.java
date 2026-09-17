@@ -60,8 +60,8 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    @ExceptionHandler(TripAlreadyCancelledException.class)
-    public ProblemDetail tripAlreaadyCancelledException(TripAlreadyCancelledException ex) {
+    @ExceptionHandler(TripAlreadyCanceledException.class)
+    public ProblemDetail tripAlreaadyCancelledException(TripAlreadyCanceledException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         return pd;
     }
