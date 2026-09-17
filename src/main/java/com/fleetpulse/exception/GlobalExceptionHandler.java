@@ -60,6 +60,12 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(TripAlreadyCancelledException.class)
+    public ProblemDetail tripAlreaadyCancelledException(TripAlreadyCancelledException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return pd;
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
         log.error("Data integrity error.", ex);

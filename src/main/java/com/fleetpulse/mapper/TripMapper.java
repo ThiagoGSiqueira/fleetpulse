@@ -1,14 +1,10 @@
 package com.fleetpulse.mapper;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Component;
 
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
-import com.fleetpulse.domain.TripStatus;
 import com.fleetpulse.domain.Vehicle;
-import com.fleetpulse.util.GeoUtils;
 import com.fleetpulse.web.dto.BrasilApiDto;
 import com.fleetpulse.web.dto.DriverResponseDto;
 import com.fleetpulse.web.dto.TripRequestDto;
@@ -52,7 +48,7 @@ public class TripMapper {
                 .destinationLatitude(destinationBrasilApiAddress.getLatitude())
                 .destinationLongitude(destinationBrasilApiAddress.getLongitude())
                 .build();
-                
+
                 return tripEntity;
         }
 

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fleetpulse.exception.TripAlreadyCancelledException;
 import com.fleetpulse.util.GeoUtils;
 
 import jakarta.persistence.Column;
@@ -26,25 +27,23 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 
 @Table(name = "trips")
 public class Trip {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @CreatedDate 
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @LastModifiedDate 
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,65 +54,63 @@ public class Trip {
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @NotBlank 
+    @NotBlank
     @Column(nullable = false, length = 10)
     private String originZipCode;
 
-    @NotBlank 
+    @NotBlank
     @Column(nullable = false, length = 120)
     private String originAddress;
 
-    @NotNull 
+    @NotNull
     @Column(nullable = false)
     private Double originLatitude;
 
-    @NotNull 
+    @NotNull
     @Column(nullable = false)
     private Double originLongitude;
 
-    @NotBlank 
+    @NotBlank
     @Column(nullable = false, length = 10)
     private String destinationZipCode;
 
-    @NotBlank 
+    @NotBlank
     @Column(nullable = false, length = 120)
     private String destinationAddress;
 
-    @NotNull 
+    @NotNull
     @Column(nullable = false)
     private Double destinationLatitude;
 
-    @NotNull 
+    @NotNull
     @Column(nullable = false)
-    private Double  destinationLongitude;
+    private Double destinationLongitude;
 
-    @NotNull 
+    @NotNull
     @Column(nullable = false)
     private Double distanceInKm;
-
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
-    @NotNull    
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TripStatus status;
 
-    @Builder 
+    @Builder
     public Trip(
-        Driver driver,
-        Vehicle vehicle,
-        String originZipCode,
-        String originAddress,
-        Double originLatitude,
-        Double originLongitude,
-        String destinationZipCode,
-        String destinationAddress,
-        Double destinationLatitude,
-        Double destinationLongitude
-    ) {
+            Driver driver,
+            Vehicle vehicle,
+            String originZipCode,
+            String originAddress,
+            Double originLatitude,
+            Double originLongitude,
+            String destinationZipCode,
+            String destinationAddress,
+            Double destinationLatitude,
+            Double destinationLongitude) {
         this.driver = driver;
         this.vehicle = vehicle;
         this.originZipCode = originZipCode;
@@ -125,7 +122,15 @@ public class Trip {
         this.destinationLatitude = destinationLatitude;
         this.destinationLongitude = destinationLongitude;
         this.distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(this.originLatitude, this.originLongitude,
-        this.destinationLatitude, this.destinationLongitude);
+                this.destinationLatitude, this.destinationLongitude);
         this.status = TripStatus.PENDING;
     }
+
+    public void cancel() {
+        if(this.status == TripStatus.CANCELED) {
+            throw new TripAlreadyCancelledException("Trip", this.id.toString());
+        }
+        this.status = TripStatus.CANCELED;
+    }
+
 }
