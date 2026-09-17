@@ -75,4 +75,5 @@ public class VehicleService {
         return vehicleRepository.findById(id).
         orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
     }
+
 }

@@ -3,7 +3,6 @@ package com.fleetpulse.mapper;
 import org.springframework.stereotype.Component;
 
 import com.fleetpulse.domain.Vehicle;
-import com.fleetpulse.domain.VehicleStatus;
 import com.fleetpulse.web.dto.VehicleRequestDto;
 import com.fleetpulse.web.dto.VehicleResponseDto;
 
@@ -15,10 +14,10 @@ public class VehicleMapper {
     }
 
     public Vehicle toEntity(VehicleRequestDto vehicleDto) {
-        Vehicle vehicleEntity = new Vehicle();
-        vehicleEntity.setLicensePlate(vehicleDto.licensePlate());
-        vehicleEntity.setModel(vehicleDto.model());
-        vehicleEntity.setStatus(VehicleStatus.AVAILABLE);
+        Vehicle vehicleEntity = Vehicle.builder()
+        .licensePlate(vehicleDto.licensePlate())
+        .model(vehicleDto.model())
+        .build();
 
         return vehicleEntity;
     }

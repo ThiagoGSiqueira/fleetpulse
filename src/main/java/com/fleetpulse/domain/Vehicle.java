@@ -11,9 +11,13 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @Entity
@@ -41,4 +45,10 @@ public class Vehicle {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private VehicleStatus status = VehicleStatus.AVAILABLE;
+
+    @Builder 
+    public Vehicle(String licensePlate, String model){
+        this.licensePlate = licensePlate;
+        this.model = model;
+    }
 }
