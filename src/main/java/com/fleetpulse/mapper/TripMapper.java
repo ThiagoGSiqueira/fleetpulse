@@ -40,22 +40,19 @@ public class TripMapper {
         public Trip toEntity(TripRequestDto tripDto,
                         Driver driverEntity, Vehicle vehicleEntity,
                         BrasilApiDto originBrasilApiAddress, BrasilApiDto destinationBrasilApiAddress) {
-                Trip tripEntity = new Trip();
-                tripEntity.setDriver(driverEntity);
-                tripEntity.setVehicle(vehicleEntity);
-                tripEntity.setOriginZipCode(tripDto.originZipCode());
-                tripEntity.setDestinationZipCode(tripDto.destinationZipCode());
-                tripEntity.setOriginAddress(originBrasilApiAddress.getFormattedAddress());
-                tripEntity.setOriginLatitude(originBrasilApiAddress.getLatitude());
-                tripEntity.setOriginLongitude(originBrasilApiAddress.getLongitude());
-                tripEntity.setDestinationAddress(destinationBrasilApiAddress.getFormattedAddress());
-                tripEntity.setDestinationLatitude(destinationBrasilApiAddress.getLatitude());
-                tripEntity.setDestinationLongitude(destinationBrasilApiAddress.getLongitude());
-                tripEntity.setStartTime(LocalDateTime.now());
-                tripEntity.setStatus(TripStatus.PENDING);
-                double distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(originBrasilApiAddress.getLatitude(), originBrasilApiAddress.getLongitude(),
-        destinationBrasilApiAddress.getLatitude(), destinationBrasilApiAddress.getLongitude());
-                tripEntity.setDistanceInKm(distanceInKm);
+                Trip tripEntity = Trip.builder()
+                .driver(driverEntity)
+                .vehicle(vehicleEntity)
+                .originZipCode(tripDto.originZipCode())
+                .destinationZipCode(tripDto.destinationZipCode())
+                .originAddress(originBrasilApiAddress.getFormattedAddress())
+                .originLatitude(originBrasilApiAddress.getLatitude())
+                .originLongitude(originBrasilApiAddress.getLongitude())
+                .destinationAddress(destinationBrasilApiAddress.getFormattedAddress())
+                .destinationLatitude(destinationBrasilApiAddress.getLatitude())
+                .destinationLongitude(destinationBrasilApiAddress.getLongitude())
+                .build();
+                
                 return tripEntity;
         }
 

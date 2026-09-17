@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fleetpulse.util.GeoUtils;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -20,9 +22,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @Entity
@@ -85,8 +91,7 @@ public class Trip {
     @Column(nullable = false)
     private Double distanceInKm;
 
-    @NotNull  
-    @Column(nullable = false)
+
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
@@ -95,4 +100,32 @@ public class Trip {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TripStatus status;
+
+    @Builder 
+    public Trip(
+        Driver driver,
+        Vehicle vehicle,
+        String originZipCode,
+        String originAddress,
+        Double originLatitude,
+        Double originLongitude,
+        String destinationZipCode,
+        String destinationAddress,
+        Double destinationLatitude,
+        Double destinationLongitude
+    ) {
+        this.driver = driver;
+        this.vehicle = vehicle;
+        this.originZipCode = originZipCode;
+        this.originAddress = originAddress;
+        this.originLatitude = originLatitude;
+        this.originLongitude = originLongitude;
+        this.destinationZipCode = destinationZipCode;
+        this.destinationAddress = destinationAddress;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
+        this.distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(this.originLatitude, this.originLongitude,
+        this.destinationLatitude, this.destinationLongitude);
+        this.status = TripStatus.PENDING;
+    }
 }
