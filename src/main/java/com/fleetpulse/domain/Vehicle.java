@@ -1,5 +1,7 @@
 package com.fleetpulse.domain;
 
+import com.fleetpulse.exception.ResourceAlreadyDisabledException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,22 +17,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
-    // Using SEQUENCE strategy to enable batching and improve performance with Spring Batch/Kafka over IDENTITY
+    // Using SEQUENCE strategy to enable batching and improve performance with
+    // Spring Batch/Kafka over IDENTITY
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq_gen")
-    @SequenceGenerator (
-        name = "vehicle_seq_gen",
-        sequenceName = "seq_vehicle",
-        allocationSize = 50
-    )
+    @SequenceGenerator(name = "vehicle_seq_gen", sequenceName = "seq_vehicle", allocationSize = 50)
     private Long id;
 
     @Column(unique = true, nullable = false, length = 7)
@@ -38,7 +35,7 @@ public class Vehicle {
     private String licensePlate;
 
     @Column(nullable = false, length = 40)
-    @NotBlank 
+    @NotBlank
     private String model;
 
     @NotNull
@@ -46,9 +43,25 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleStatus status = VehicleStatus.AVAILABLE;
 
-    @Builder 
-    public Vehicle(String licensePlate, String model){
+    @Builder
+    public Vehicle(String licensePlate, String model) {
         this.licensePlate = licensePlate;
         this.model = model;
+    }
+
+    public void updateVehicleData(String newLicensePlate, String newModel) {
+        if (newLicensePlate != null) {
+            this.licensePlate = newLicensePlate;
+        }
+        if (newModel != null) {
+            this.model = newModel;
+        }
+    }
+
+    public void deactivate() {
+        if (this.status == VehicleStatus.INACTIVE) {
+            throw new ResourceAlreadyDisabledException("Vehicle", "License Plate", this.licensePlate);
+        }
+        this.status = VehicleStatus.INACTIVE;
     }
 }

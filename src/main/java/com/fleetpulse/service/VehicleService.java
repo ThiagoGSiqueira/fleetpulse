@@ -53,12 +53,7 @@ public class VehicleService {
     @Transactional
     public VehicleResponseDto updateVehicle(Long id, VehicleRequestUpdateDto vehicleDto) {
         Vehicle vehicleEntity = findVehicleEntityById(id);
-        if (vehicleDto.licensePlate() != null) {
-            vehicleEntity.setLicensePlate(vehicleDto.licensePlate());
-        }
-        if (vehicleDto.model() != null) {
-            vehicleEntity.setModel(vehicleDto.model());
-        }
+        vehicleEntity.updateVehicleData(vehicleDto.licensePlate(), vehicleDto.model());
         vehicleRepository.save(vehicleEntity);
         return vehicleMapper.toDto(vehicleEntity);
     }
@@ -66,7 +61,7 @@ public class VehicleService {
     @Transactional 
     public void deleteVehicle(Long id) {
         Vehicle vehicleEntity = findVehicleEntityById(id);
-        vehicleEntity.setStatus(VehicleStatus.INACTIVE);
+        vehicleEntity.deactivate();
         vehicleRepository.save(vehicleEntity);
     }
 
