@@ -31,4 +31,48 @@ public class DriverTest {
 
         assertEquals(String.format("%s with %s '%s' is already deactivated.", "Driver", "CNH", driver.getCnhNumber()), ex.getMessage());
     }
+
+    @Test
+    @DisplayName("Should update name and CNH number")
+    void shouldUpdateDriver() {
+        Driver driver = new Driver("Isabele", "123456");
+
+        driver.updatePersonalData("Thiago", "654321");
+        assertEquals("Thiago", driver.getName());
+
+        assertEquals("654321", driver.getCnhNumber());
+    }
+
+    @Test
+    @DisplayName("Should update name and keep original CNH when new CNH is null")
+    void shouldUpdateOnlyNameWhenCnhIsNull() {
+        Driver driver = new Driver("Isabele", "123456");
+
+        driver.updatePersonalData("Thiago", null);
+
+        assertEquals("Thiago", driver.getName());
+        assertEquals("123456", driver.getCnhNumber());
+    }
+
+    @Test 
+    @DisplayName("Should update CNH and keep original name when new name is null")
+    void shouldUpdateOnlyCnhWhenNameIsNull() {
+        Driver driver = new Driver("Isabele", "123456");
+
+        driver.updatePersonalData(null, "654321");
+        
+        assertEquals("Isabele", driver.getName());
+        assertEquals("654321", driver.getCnhNumber());
+    }
+
+    @Test
+    @DisplayName("Should keep all original personal data when all inputs are null")
+    void shouldNotUpdatePersonalDataWhenAllInputsAreNull() {
+        Driver driver = new Driver("Isabele", "123456");
+
+        driver.updatePersonalData(null, null);
+
+        assertEquals("Isabele", driver.getName());
+        assertEquals("123456", driver.getCnhNumber());
+    }
 }
