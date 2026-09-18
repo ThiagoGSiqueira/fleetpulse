@@ -67,7 +67,8 @@ public class Driver {
 
     public void updatePersonalData(String newName, String newCnhNumber) {
         if (this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be modified", this.getCnhNumber()));
+            throw new BusinessRuleException(
+                    String.format("Driver with CNH '%s' cannot be modified", this.getCnhNumber()));
         }
         if (newName != null) {
             this.name = newName;
@@ -78,42 +79,44 @@ public class Driver {
     }
 
     public void deactivate() {
-        if (this.status == DriverStatus.INACTIVE) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already deactivated", this.getCnhNumber()));
-        }
+        this.validateIsActive();
         if (this.status == DriverStatus.BUSY) {
             throw new BusinessRuleException(
                     String.format("Driver with CNH '%s' cannot be deactivate", this.getCnhNumber()));
         }
+        
         this.status = DriverStatus.INACTIVE;
     }
 
     public void assignToTrip() {
-        if (this.status == DriverStatus.OFF_DUTY || this.status == DriverStatus.BUSY
-                || this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip"));
+        if (this.status != DriverStatus.AVAILABLE) {
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip", this.getCnhNumber()));
         }
 
         this.status = DriverStatus.BUSY;
     }
 
     public void makeAvailable() {
+        this.validateIsActive();
         if (this.status == DriverStatus.AVAILABLE) {
             throw new ConflictException(String.format("Driver with CNH '%s' already available", this.getCnhNumber()));
         }
-        if (this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
-        }
+
         this.status = DriverStatus.AVAILABLE;
     }
 
     public void goOffDuty() {
+        this.validateIsActive();
         if (this.status == DriverStatus.OFF_DUTY) {
             throw new ConflictException(String.format("Driver with CNH '%s' already off duty", this.getCnhNumber()));
         }
+
+        this.status = DriverStatus.OFF_DUTY;
+    }
+
+    public void validateIsActive() {
         if (this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
         }
-        this.status = DriverStatus.OFF_DUTY;
     }
 }

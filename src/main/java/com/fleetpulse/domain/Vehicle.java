@@ -64,16 +64,16 @@ public class Vehicle {
     }
 
     public void deactivate() {
-        if (this.status == VehicleStatus.INACTIVE) {
-            throw new ConflictException(
-                    String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
+        this.validateIsActive();
+        if (this.status == VehicleStatus.BUSY) {
+            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be deactivate", this.getLicensePlate()));
         }
+        
         this.status = VehicleStatus.INACTIVE;
     }
 
     public void assignToTrip() {
-        if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.MAINTENANCE
-                || this.status == VehicleStatus.BUSY) {
+        if (this.status != VehicleStatus.AVAILABLE) {
             throw new BusinessRuleException(String
                     .format("Vehicle with License Plate '%s' cannot be assigned to a trip", this.getLicensePlate()));
         }
@@ -82,21 +82,25 @@ public class Vehicle {
     }
 
     public void makeAvailable() {
+        validateIsActive();
         if (this.status == VehicleStatus.AVAILABLE) {
             throw new ConflictException(String.format("Vehicle with License Plate '%s' already available", this.getLicensePlate()));
-        }
-        if (this.status == VehicleStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' is inactive.", this.getLicensePlate()));
         }
 
         this.status = VehicleStatus.AVAILABLE;
     }
 
     public void sendToMaintenance() {
-        if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.BUSY || this.status == VehicleStatus.MAINTENANCE) {
+        if (this.status != VehicleStatus.AVAILABLE) {
             throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be sent to maintenance.", this.getLicensePlate()));
         }
 
         this.status = VehicleStatus.MAINTENANCE;
+    }
+
+    public void validateIsActive() {
+        if (this.status == VehicleStatus.INACTIVE) {
+            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
+        }
     }
 }
