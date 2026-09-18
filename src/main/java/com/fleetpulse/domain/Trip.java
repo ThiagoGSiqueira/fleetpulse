@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fleetpulse.exception.TripAlreadyCancelledException;
+import com.fleetpulse.exception.TripAlreadyCanceledException;
 import com.fleetpulse.util.GeoUtils;
 
 import jakarta.persistence.Column;
@@ -128,7 +128,7 @@ public class Trip {
 
     public void cancel() {
         if(this.status == TripStatus.CANCELED) {
-            throw new TripAlreadyCancelledException("Trip", this.id.toString());
+            throw new TripAlreadyCanceledException("Trip", this.id.toString());
         }
         this.status = TripStatus.CANCELED;
     }
