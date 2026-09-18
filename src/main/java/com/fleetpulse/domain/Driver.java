@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fleetpulse.exception.DriverCannotBeAssignedException;
-import com.fleetpulse.exception.ResourceAlreadyDisabledException;
-import com.fleetpulse.exception.ResourceCannotBeDeactivatedException;
+import com.fleetpulse.exception.BusinessRuleException;
+import com.fleetpulse.exception.ConflictException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,19 +76,18 @@ public class Driver {
 
     public void deactivate() {
         if (this.status == DriverStatus.INACTIVE) {
-            throw new ResourceAlreadyDisabledException("Driver", "CNH", this.cnhNumber);
+            throw new ConflictException(String.format("Driver with CNH '%s' already deactivated", this.getCnhNumber()));
         }
 
         if (this.status == DriverStatus.BUSY) {
-            throw new ResourceCannotBeDeactivatedException("Driver", "CNH", this.cnhNumber);
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be deactivate", this.getCnhNumber()));
         }
-
         this.status = DriverStatus.INACTIVE;
     }
 
     public void canBeAssignedToTrip() {
         if(this.status == DriverStatus.BUSY || this.status == DriverStatus.INACTIVE) {
-            throw new DriverCannotBeAssignedException("Driver", "CNH", this.cnhNumber);
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip"));
         }
     }
 }

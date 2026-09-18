@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.fleetpulse.exception.TripAlreadyCanceledException;
+import com.fleetpulse.exception.ConflictException;
 
 public class TripTest {
     @Test 
@@ -27,11 +27,11 @@ public class TripTest {
         ReflectionTestUtils.setField(trip, "id", 1L);
         trip.cancel();
 
-        TripAlreadyCanceledException ex = assertThrows(TripAlreadyCanceledException.class, () -> {
+        ConflictException ex = assertThrows(ConflictException.class, () -> {
             trip.cancel();
         });
 
-        assertEquals(String.format("%s with ID: %s is already cancelled.", "Trip", trip.getId().toString()), ex.getMessage());
+        assertEquals(String.format("Trip with ID: %s is already cancelled.", trip.getId().toString()), ex.getMessage());
     }
 
 

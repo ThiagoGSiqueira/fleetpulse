@@ -68,6 +68,6 @@ public class TripService {
     @Transactional(readOnly = true) 
     public Trip findTripEntityById(Long id) {
         return tripRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Trip", id.toString()));
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Trip with %s not found", id.toString())));
     }
 }

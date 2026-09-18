@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fleetpulse.exception.TripAlreadyCanceledException;
+import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.util.GeoUtils;
 
 import jakarta.persistence.Column;
@@ -128,7 +128,7 @@ public class Trip {
 
     public void cancel() {
         if(this.status == TripStatus.CANCELED) {
-            throw new TripAlreadyCanceledException("Trip", this.id.toString());
+            throw new ConflictException(String.format("Trip with ID: %s is already canceled", this.getId().toString()));
         }
         this.status = TripStatus.CANCELED;
     }

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fleetpulse.domain.Vehicle;
-import com.fleetpulse.exception.ResourceAlreadyExistsException;
+import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
 import com.fleetpulse.repository.VehicleRepository;
@@ -29,7 +29,7 @@ public class VehicleService {
     public VehicleResponseDto createVehicle(@Valid @RequestBody VehicleRequestDto vehicleDto) {
         Vehicle vehicleEntity = vehicleMapper.toEntity(vehicleDto);
         if(vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())){
-            throw new ResourceAlreadyExistsException("Vehicle", "License Plate", vehicleDto.licensePlate());
+            throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", vehicleDto.licensePlate()));
         }
         vehicleRepository.save(vehicleEntity);
         return vehicleMapper.toDto(vehicleEntity);
@@ -67,7 +67,7 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public Vehicle findVehicleEntityById(Long id) {
         return vehicleRepository.findById(id).
-        orElseThrow(() -> new ResourceNotFoundException("Vehicle", id.toString()));
+        orElseThrow(() -> new ResourceNotFoundException(String.format("Vehicle with ID: %s not found", id.toString())));
     }
 
 }

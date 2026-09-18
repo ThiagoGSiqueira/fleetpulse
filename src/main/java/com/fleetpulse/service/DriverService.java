@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fleetpulse.domain.Driver;
-import com.fleetpulse.exception.ResourceAlreadyExistsException;
+import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
@@ -26,7 +26,7 @@ public class DriverService {
     @Transactional
     public DriverResponseDto createDriver(DriverRequestDto driverDto) {
         if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
-            throw new ResourceAlreadyExistsException("Driver", "CNH", driverDto.cnhNumber());
+            throw new ConflictException(String.format("Driver with CNH '%s' already exists", driverDto.cnhNumber()));
         }
         Driver driverEntity = driverMapper.toEntity(driverDto);
         driverRepository.save(driverEntity);
@@ -64,6 +64,6 @@ public class DriverService {
     @Transactional(readOnly = true)
     public Driver findDriverEntityById(Long id) {
         return driverRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver", id.toString()));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Driver with ID: %s not found", id.toString())));
     }
 }

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.fleetpulse.exception.ResourceAlreadyDisabledException;
+import com.fleetpulse.exception.ConflictException;
 
 public class DriverTest {
     @Test 
@@ -25,11 +25,11 @@ public class DriverTest {
         Driver driver = new Driver("Isabele", "123456");
         driver.deactivate();
 
-        ResourceAlreadyDisabledException ex = assertThrows(
-            ResourceAlreadyDisabledException.class, () -> driver.deactivate()
+        ConflictException ex = assertThrows(
+            ConflictException.class, () -> driver.deactivate()
         );
 
-        assertEquals(String.format("%s with %s '%s' is already deactivated.", "Driver", "CNH", driver.getCnhNumber()), ex.getMessage());
+        assertEquals(String.format("Driver with CNH '%s' is already deactivated.", driver.getCnhNumber()), ex.getMessage());
     }
 
     @Test

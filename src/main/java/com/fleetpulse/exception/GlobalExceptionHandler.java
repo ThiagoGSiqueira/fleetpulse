@@ -42,39 +42,21 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ProblemDetail businessRuleException(BusinessRuleException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
+        return pd;
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ProblemDetail conflictException(ConflictException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return pd;
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail resourceNotFoundException(ResourceNotFoundException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        return pd;
-    }
-
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ProblemDetail resourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        return pd;
-    }
-
-    @ExceptionHandler(ResourceAlreadyDisabledException.class)
-    public ProblemDetail resourceAlreadyDisabledException(ResourceAlreadyDisabledException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        return pd;
-    }
-
-    @ExceptionHandler(TripAlreadyCanceledException.class)
-    public ProblemDetail tripAlreaadyCancelledException(TripAlreadyCanceledException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        return pd;
-    }
-
-    @ExceptionHandler(ResourceCannotBeDeactivatedException.class)
-    public ProblemDetail resourceCannotBeDeactivatedException(ResourceCannotBeDeactivatedException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
-        return pd;
-    }
-
-    @ExceptionHandler(DriverCannotBeAssignedException.class) 
-    public ProblemDetail driverCannotBeAssignedException(DriverCannotBeAssignedException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         return pd;
     }
 
@@ -94,7 +76,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
                 "Something went wrong. Please try again later.");
-                
+
         return pd;
     }
 }

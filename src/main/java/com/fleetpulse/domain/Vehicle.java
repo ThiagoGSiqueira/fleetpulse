@@ -1,6 +1,6 @@
 package com.fleetpulse.domain;
 
-import com.fleetpulse.exception.ResourceAlreadyDisabledException;
+import com.fleetpulse.exception.ConflictException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,7 +60,7 @@ public class Vehicle {
 
     public void deactivate() {
         if (this.status == VehicleStatus.INACTIVE) {
-            throw new ResourceAlreadyDisabledException("Vehicle", "License Plate", this.licensePlate);
+            throw new ConflictException(String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
         }
         this.status = VehicleStatus.INACTIVE;
     }
