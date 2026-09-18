@@ -1,5 +1,6 @@
 package com.fleetpulse.domain;
 
+import com.fleetpulse.exception.BusinessRuleException;
 import com.fleetpulse.exception.ConflictException;
 
 import jakarta.persistence.Column;
@@ -60,8 +61,18 @@ public class Vehicle {
 
     public void deactivate() {
         if (this.status == VehicleStatus.INACTIVE) {
-            throw new ConflictException(String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
+            throw new ConflictException(
+                    String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
         }
         this.status = VehicleStatus.INACTIVE;
+    }
+
+    public void assignToTrip() {
+        if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.MAINTENANCE
+                || this.status == VehicleStatus.BUSY) {
+            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be assigned to a trip", this.getLicensePlate()));
+        }
+
+        this.status = VehicleStatus.BUSY;
     }
 }
