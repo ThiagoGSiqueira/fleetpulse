@@ -87,9 +87,12 @@ public class Driver {
         this.status = DriverStatus.INACTIVE;
     }
 
-    public void canBeAssignedToTrip() {
-        if(this.status == DriverStatus.BUSY || this.status == DriverStatus.INACTIVE) {
+    public void assignToTrip() {
+        if(this.status == DriverStatus.OFF_DUTY ||this.status == DriverStatus.BUSY || this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip"));
         }
+
+        this.status = DriverStatus.BUSY;
     }
+
 }
