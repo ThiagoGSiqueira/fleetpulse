@@ -95,4 +95,13 @@ public class Driver {
         this.status = DriverStatus.BUSY;
     }
 
+    public void makeAvailable() {
+        if (this.status == DriverStatus.AVAILABLE) {
+            throw new ConflictException(String.format("Driver with CNH '%s' already available", this.getCnhNumber()));
+        }
+        if (this.status == DriverStatus.INACTIVE) {
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
+        }
+        this.status = DriverStatus.AVAILABLE;
+    }
 }
