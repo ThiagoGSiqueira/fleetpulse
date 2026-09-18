@@ -82,13 +82,15 @@ public class Driver {
             throw new ConflictException(String.format("Driver with CNH '%s' already deactivated", this.getCnhNumber()));
         }
         if (this.status == DriverStatus.BUSY) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be deactivate", this.getCnhNumber()));
+            throw new BusinessRuleException(
+                    String.format("Driver with CNH '%s' cannot be deactivate", this.getCnhNumber()));
         }
         this.status = DriverStatus.INACTIVE;
     }
 
     public void assignToTrip() {
-        if(this.status == DriverStatus.OFF_DUTY ||this.status == DriverStatus.BUSY || this.status == DriverStatus.INACTIVE) {
+        if (this.status == DriverStatus.OFF_DUTY || this.status == DriverStatus.BUSY
+                || this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip"));
         }
 
@@ -103,5 +105,15 @@ public class Driver {
             throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
         }
         this.status = DriverStatus.AVAILABLE;
+    }
+
+    public void goOffDuty() {
+        if (this.status == DriverStatus.OFF_DUTY) {
+            throw new ConflictException(String.format("Driver with CNH '%s' already off duty", this.getCnhNumber()));
+        }
+        if (this.status == DriverStatus.INACTIVE) {
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
+        }
+        this.status = DriverStatus.OFF_DUTY;
     }
 }
