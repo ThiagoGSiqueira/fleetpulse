@@ -33,6 +33,8 @@ public class TripService {
         Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
         Vehicle vehicleEntity = vehicleService.findVehicleEntityById(tripDto.vehicleId());
 
+        driverEntity.canBeAssignedToTrip();
+
         BrasilApiDto originBrasilApiAddress = brasilApiService.searchAddress(tripDto.originZipCode());
         BrasilApiDto destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.destinationZipCode());
 

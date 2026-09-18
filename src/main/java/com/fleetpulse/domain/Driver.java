@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fleetpulse.exception.DriverCannotBeAssignedException;
 import com.fleetpulse.exception.ResourceAlreadyDisabledException;
 import com.fleetpulse.exception.ResourceCannotBeDeactivatedException;
 
@@ -84,5 +85,11 @@ public class Driver {
         }
 
         this.status = DriverStatus.INACTIVE;
+    }
+
+    public void canBeAssignedToTrip() {
+        if(this.status == DriverStatus.BUSY || this.status == DriverStatus.INACTIVE) {
+            throw new DriverCannotBeAssignedException("Driver", "CNH", this.cnhNumber);
+        }
     }
 }

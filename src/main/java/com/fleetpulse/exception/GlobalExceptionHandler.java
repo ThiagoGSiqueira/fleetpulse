@@ -72,6 +72,12 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(DriverCannotBeAssignedException.class) 
+    public ProblemDetail driverCannotBeAssignedException(DriverCannotBeAssignedException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
+        return pd;
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
         log.error("Data integrity error.", ex);
