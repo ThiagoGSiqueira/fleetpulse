@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +64,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TripAlreadyCancelledException.class)
     public ProblemDetail tripAlreaadyCancelledException(TripAlreadyCancelledException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return pd;
+    }
+
+    @ExceptionHandler(ResourceCannotBeDeactivatedException.class)
+    public ProblemDetail resourceCannotBeDeactivatedException(ResourceCannotBeDeactivatedException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         return pd;
     }
 

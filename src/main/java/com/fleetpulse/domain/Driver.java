@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fleetpulse.exception.ResourceAlreadyDisabledException;
+import com.fleetpulse.exception.ResourceCannotBeDeactivatedException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,6 +78,11 @@ public class Driver {
         if (this.status == DriverStatus.INACTIVE) {
             throw new ResourceAlreadyDisabledException("Driver", "CNH", this.cnhNumber);
         }
+
+        if (this.status == DriverStatus.BUSY) {
+            throw new ResourceCannotBeDeactivatedException("Driver", "CNH", this.cnhNumber);
+        }
+
         this.status = DriverStatus.INACTIVE;
     }
 }
