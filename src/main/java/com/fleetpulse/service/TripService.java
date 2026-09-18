@@ -63,6 +63,7 @@ public class TripService {
     public TripResponseDto cancelTripById(Long id) {
         Trip tripEntity = findTripEntityById(id);
         tripEntity.cancel();
+        
         return tripMapper.toDto(tripEntity);
     }
 

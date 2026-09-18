@@ -81,6 +81,17 @@ public class Vehicle {
         this.status = VehicleStatus.BUSY;
     }
 
+    public void makeAvailable() {
+        if (this.status == VehicleStatus.AVAILABLE) {
+            throw new ConflictException(String.format("Vehicle with License Plate '%s' already available", this.getLicensePlate()));
+        }
+        if (this.status == VehicleStatus.INACTIVE) {
+            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' is inactive.", this.getLicensePlate()));
+        }
+
+        this.status = VehicleStatus.AVAILABLE;
+    }
+
     public void sendToMaintenance() {
         if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.BUSY || this.status == VehicleStatus.MAINTENANCE) {
             throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be sent to maintenance.", this.getLicensePlate()));
