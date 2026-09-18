@@ -51,6 +51,11 @@ public class Vehicle {
     }
 
     public void updateVehicleData(String newLicensePlate, String newModel) {
+        if (this.status == VehicleStatus.INACTIVE) {
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' cannot be modified", this.getLicensePlate()));
+        }
+
         if (newLicensePlate != null) {
             this.licensePlate = newLicensePlate;
         }
@@ -70,7 +75,8 @@ public class Vehicle {
     public void assignToTrip() {
         if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.MAINTENANCE
                 || this.status == VehicleStatus.BUSY) {
-            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be assigned to a trip", this.getLicensePlate()));
+            throw new BusinessRuleException(String
+                    .format("Vehicle with License Plate '%s' cannot be assigned to a trip", this.getLicensePlate()));
         }
 
         this.status = VehicleStatus.BUSY;

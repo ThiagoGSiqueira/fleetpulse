@@ -67,7 +67,7 @@ public class Driver {
 
     public void updatePersonalData(String newName, String newCnhNumber) {
         if (this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be modified", this.cnhNumber));
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be modified", this.getCnhNumber()));
         }
         if (newName != null) {
             this.name = newName;
