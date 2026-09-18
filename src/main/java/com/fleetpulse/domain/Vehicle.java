@@ -55,7 +55,6 @@ public class Vehicle {
             throw new BusinessRuleException(
                     String.format("Vehicle with License Plate '%s' cannot be modified", this.getLicensePlate()));
         }
-
         if (newLicensePlate != null) {
             this.licensePlate = newLicensePlate;
         }
@@ -80,5 +79,13 @@ public class Vehicle {
         }
 
         this.status = VehicleStatus.BUSY;
+    }
+
+    public void sendToMaintenance() {
+        if (this.status == VehicleStatus.INACTIVE || this.status == VehicleStatus.BUSY || this.status == VehicleStatus.MAINTENANCE) {
+            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be sent to maintenance.", this.getLicensePlate()));
+        }
+
+        this.status = VehicleStatus.MAINTENANCE;
     }
 }
