@@ -3,7 +3,7 @@ package com.fleetpulse.web.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record VehicleRequestDto(
+public record VehicleRequestDTO(
     @NotBlank(message = "License plate is required.")
     @Size(min = 7, max = 7, message = "size must be 7 characters long")
     String licensePlate,

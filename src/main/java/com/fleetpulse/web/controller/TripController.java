@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.TripService;
 import com.fleetpulse.web.dto.AssignDriverDTO;
-import com.fleetpulse.web.dto.TripRequestDto;
-import com.fleetpulse.web.dto.TripResponseDto;
+import com.fleetpulse.web.dto.TripRequestDTO;
+import com.fleetpulse.web.dto.TripResponseDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,32 +28,32 @@ public class TripController {
     private final TripService tripService;
 
     @PostMapping
-    public ResponseEntity<TripResponseDto> createTrip(@Valid @RequestBody TripRequestDto tripDto) {
-        TripResponseDto response = tripService.createTrip(tripDto);
+    public ResponseEntity<TripResponseDTO> createTrip(@Valid @RequestBody TripRequestDTO tripDto) {
+        TripResponseDTO response = tripService.createTrip(tripDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<TripResponseDto>> getAllTrips() {
-        List<TripResponseDto> response = tripService.findAllTrips();
+    public ResponseEntity<List<TripResponseDTO>> getAllTrips() {
+        List<TripResponseDTO> response = tripService.findAllTrips();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TripResponseDto> getTripById(@PathVariable Long id) {
-        TripResponseDto response = tripService.findTripById(id);
+    public ResponseEntity<TripResponseDTO> getTripById(@PathVariable Long id) {
+        TripResponseDTO response = tripService.findTripById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping ("/{id}/driver")
-    public ResponseEntity<TripResponseDto> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO driverDto) {
-        TripResponseDto response = tripService.reassignDriver(id, driverDto);
+    public ResponseEntity<TripResponseDTO> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO driverDto) {
+        TripResponseDTO response = tripService.reassignDriver(id, driverDto);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<TripResponseDto> cancelTrip(@PathVariable Long id) {
-        TripResponseDto response = tripService.cancelTripById(id);
+    public ResponseEntity<TripResponseDTO> cancelTrip(@PathVariable Long id) {
+        TripResponseDTO response = tripService.cancelTripById(id);
         return ResponseEntity.ok(response);
     }
 }

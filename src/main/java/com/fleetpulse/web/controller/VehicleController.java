@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.VehicleService;
-import com.fleetpulse.web.dto.VehicleRequestDto;
-import com.fleetpulse.web.dto.VehicleRequestUpdateDto;
-import com.fleetpulse.web.dto.VehicleResponseDto;
+import com.fleetpulse.web.dto.VehicleRequestDTO;
+import com.fleetpulse.web.dto.VehicleRequestUpdateDTO;
+import com.fleetpulse.web.dto.VehicleResponseDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +28,26 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping
-    public ResponseEntity<VehicleResponseDto> createVehicle(@Valid @RequestBody VehicleRequestDto vehicleDto) {
-        VehicleResponseDto response = vehicleService.createVehicle(vehicleDto);
+    public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO vehicleDto) {
+        VehicleResponseDTO response = vehicleService.createVehicle(vehicleDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     } 
 
     @GetMapping 
-    public ResponseEntity<List<VehicleResponseDto>> getAllVehicles() {
-        List<VehicleResponseDto> response = vehicleService.findAllVehicles();
+    public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
+        List<VehicleResponseDTO> response = vehicleService.findAllVehicles();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleResponseDto> getVehicleById(@PathVariable Long id) {
-        VehicleResponseDto response = vehicleService.findVehicleById(id);
+    public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Long id) {
+        VehicleResponseDTO response = vehicleService.findVehicleById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDto> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDto vehicleDto) {
-        VehicleResponseDto response = vehicleService.updateVehicle(id, vehicleDto);
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDTO vehicleDto) {
+        VehicleResponseDTO response = vehicleService.updateVehicle(id, vehicleDto);
         return ResponseEntity.ok(response);
     }
 

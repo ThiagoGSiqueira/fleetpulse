@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.DriverService;
-import com.fleetpulse.web.dto.DriverRequestDto;
-import com.fleetpulse.web.dto.DriverRequestUpdateDto;
-import com.fleetpulse.web.dto.DriverResponseDto;
+import com.fleetpulse.web.dto.DriverRequestDTO;
+import com.fleetpulse.web.dto.DriverRequestUpdateDTO;
+import com.fleetpulse.web.dto.DriverResponseDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,26 +29,26 @@ public class DriverController {
     private final DriverService driverService;
   
     @PostMapping
-    public ResponseEntity<DriverResponseDto> createDriver(@Valid @RequestBody DriverRequestDto driverDto) {
-        DriverResponseDto response = driverService.createDriver(driverDto);
+    public ResponseEntity<DriverResponseDTO> createDriver(@Valid @RequestBody DriverRequestDTO driverDto) {
+        DriverResponseDTO response = driverService.createDriver(driverDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<DriverResponseDto>> getAllDrivers() {
-        List<DriverResponseDto> response = driverService.findAllDrivers();
+    public ResponseEntity<List<DriverResponseDTO>> getAllDrivers() {
+        List<DriverResponseDTO> response = driverService.findAllDrivers();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable Long id) {
-        DriverResponseDto response = driverService.findDriverById(id);
+    public ResponseEntity<DriverResponseDTO> getDriverById(@PathVariable Long id) {
+        DriverResponseDTO response = driverService.findDriverById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriverResponseDto> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDto driverDto) {
-        DriverResponseDto response = driverService.updateDriver(id, driverDto);
+    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDTO driverDto) {
+        DriverResponseDTO response = driverService.updateDriver(id, driverDto);
         return ResponseEntity.ok(response);
     }
 

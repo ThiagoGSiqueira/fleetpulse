@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import com.fleetpulse.domain.Driver;
 import com.fleetpulse.domain.Trip;
 import com.fleetpulse.domain.Vehicle;
-import com.fleetpulse.web.dto.BrasilApiDto;
-import com.fleetpulse.web.dto.DriverResponseDto;
-import com.fleetpulse.web.dto.TripRequestDto;
-import com.fleetpulse.web.dto.TripResponseDto;
-import com.fleetpulse.web.dto.VehicleResponseDto;
+import com.fleetpulse.web.dto.BrasilApiDTO;
+import com.fleetpulse.web.dto.DriverResponseDTO;
+import com.fleetpulse.web.dto.TripRequestDTO;
+import com.fleetpulse.web.dto.TripResponseDTO;
+import com.fleetpulse.web.dto.VehicleResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +20,12 @@ public class TripMapper {
         private final DriverMapper driverMapper;
         private final VehicleMapper vehicleMapper;
 
-        public TripResponseDto toDto(Trip tripEntity) {
+        public TripResponseDTO toDto(Trip tripEntity) {
 
-                DriverResponseDto driverDto = driverMapper.toDto(tripEntity.getDriver());
-                VehicleResponseDto vehicleDto = vehicleMapper.toDto(tripEntity.getVehicle());
+                DriverResponseDTO driverDto = driverMapper.toDto(tripEntity.getDriver());
+                VehicleResponseDTO vehicleDto = vehicleMapper.toDto(tripEntity.getVehicle());
 
-                return new TripResponseDto(tripEntity.getId(), driverDto, vehicleDto,
+                return new TripResponseDTO(tripEntity.getId(), driverDto, vehicleDto,
                                 tripEntity.getOriginZipCode(), tripEntity.getOriginAddress(),
                                 tripEntity.getDestinationZipCode(),
                                 tripEntity.getDestinationAddress(), tripEntity.getDistanceInKm(),
@@ -33,9 +33,9 @@ public class TripMapper {
                                 tripEntity.getStatus());
         }
 
-        public Trip toEntity(TripRequestDto tripDto,
+        public Trip toEntity(TripRequestDTO tripDto,
                         Driver driverEntity, Vehicle vehicleEntity,
-                        BrasilApiDto originBrasilApiAddress, BrasilApiDto destinationBrasilApiAddress) {
+                        BrasilApiDTO originBrasilApiAddress, BrasilApiDTO destinationBrasilApiAddress) {
                 Trip tripEntity = Trip.builder()
                 .driver(driverEntity)
                 .vehicle(vehicleEntity)

@@ -1,6 +1,6 @@
 package com.fleetpulse.web.dto;
 
-public record BrasilApiDto(
+public record BrasilApiDTO(
     String cep,
     String state,
     String city,

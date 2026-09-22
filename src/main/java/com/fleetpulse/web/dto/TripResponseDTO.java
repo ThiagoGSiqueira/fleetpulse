@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 
 import com.fleetpulse.domain.TripStatus;
 
-public record TripResponseDto(
+public record TripResponseDTO(
     Long id,
-    DriverResponseDto driver,
-    VehicleResponseDto vehicle,
+    DriverResponseDTO driver,
+    VehicleResponseDTO vehicle,
     String originZipCode,
     String originAddress,
     String destinationZipCode,

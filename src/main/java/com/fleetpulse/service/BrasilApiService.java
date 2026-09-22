@@ -3,7 +3,7 @@ package com.fleetpulse.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import com.fleetpulse.web.dto.BrasilApiDto;
+import com.fleetpulse.web.dto.BrasilApiDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,10 +13,10 @@ public class BrasilApiService {
 
     private final RestClient brasilApiClient;
 
-     public BrasilApiDto searchAddress(String cep) {
+     public BrasilApiDTO searchAddress(String cep) {
         return brasilApiClient.get()
         .uri("/{cep}", cep)
         .retrieve()
-        .body(BrasilApiDto.class);
+        .body(BrasilApiDTO.class);
     }
 }

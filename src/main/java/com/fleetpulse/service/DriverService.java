@@ -10,9 +10,9 @@ import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.DriverMapper;
 import com.fleetpulse.repository.DriverRepository;
-import com.fleetpulse.web.dto.DriverRequestDto;
-import com.fleetpulse.web.dto.DriverRequestUpdateDto;
-import com.fleetpulse.web.dto.DriverResponseDto;
+import com.fleetpulse.web.dto.DriverRequestDTO;
+import com.fleetpulse.web.dto.DriverRequestUpdateDTO;
+import com.fleetpulse.web.dto.DriverResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +24,7 @@ public class DriverService {
 
     // Create - Read - Update - Delete
     @Transactional
-    public DriverResponseDto createDriver(DriverRequestDto driverDto) {
+    public DriverResponseDTO createDriver(DriverRequestDTO driverDto) {
         if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
             throw new ConflictException(String.format("Driver with CNH '%s' already exists", driverDto.cnhNumber()));
         }
@@ -34,20 +34,20 @@ public class DriverService {
     }
 
     @Transactional(readOnly = true)
-    public List<DriverResponseDto> findAllDrivers() {
+    public List<DriverResponseDTO> findAllDrivers() {
         return driverRepository.findAll().stream()
                 .map(driverMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public DriverResponseDto findDriverById(Long id) {
+    public DriverResponseDTO findDriverById(Long id) {
         Driver driverEntity = findDriverEntityById(id);
         return driverMapper.toDto(driverEntity);
     }
 
     @Transactional
-    public DriverResponseDto updateDriver(Long id, DriverRequestUpdateDto driverDto) {
+    public DriverResponseDTO updateDriver(Long id, DriverRequestUpdateDTO driverDto) {
         Driver driverEntity = findDriverEntityById(id);
         driverEntity.updatePersonalData(driverDto.name(), driverDto.cnhNumber());
         driverRepository.save(driverEntity);

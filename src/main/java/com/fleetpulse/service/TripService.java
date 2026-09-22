@@ -12,11 +12,10 @@ import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.TripMapper;
 import com.fleetpulse.repository.TripRepository;
 import com.fleetpulse.web.dto.AssignDriverDTO;
-import com.fleetpulse.web.dto.BrasilApiDto;
-import com.fleetpulse.web.dto.TripRequestDto;
-import com.fleetpulse.web.dto.TripResponseDto;
+import com.fleetpulse.web.dto.BrasilApiDTO;
+import com.fleetpulse.web.dto.TripRequestDTO;
+import com.fleetpulse.web.dto.TripResponseDTO;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,15 +30,15 @@ public class TripService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public TripResponseDto createTrip(TripRequestDto tripDto) {
+    public TripResponseDTO createTrip(TripRequestDTO tripDto) {
         Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
         Vehicle vehicleEntity = vehicleService.findVehicleEntityById(tripDto.vehicleId());
 
         driverEntity.assignToTrip();
         vehicleEntity.assignToTrip();
 
-        BrasilApiDto originBrasilApiAddress = brasilApiService.searchAddress(tripDto.originZipCode());
-        BrasilApiDto destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.destinationZipCode());
+        BrasilApiDTO originBrasilApiAddress = brasilApiService.searchAddress(tripDto.originZipCode());
+        BrasilApiDTO destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.destinationZipCode());
 
         Trip tripEntity = tripMapper.toEntity(tripDto, driverEntity, vehicleEntity, originBrasilApiAddress,
                 destinationBrasilApiAddress);
@@ -49,20 +48,20 @@ public class TripService {
     }
 
     @Transactional(readOnly = true)
-    public List<TripResponseDto> findAllTrips() {
+    public List<TripResponseDTO> findAllTrips() {
         return tripRepository.findAll().stream()
         .map(tripMapper::toDto)
         .toList();
     }
 
     @Transactional(readOnly = true)
-    public TripResponseDto findTripById(Long id) {
+    public TripResponseDTO findTripById(Long id) {
         Trip tripEntity = findTripEntityById(id);
         return tripMapper.toDto(tripEntity);
     }
 
     @Transactional 
-    public TripResponseDto reassignDriver(Long id, AssignDriverDTO driverDto) {
+    public TripResponseDTO reassignDriver(Long id, AssignDriverDTO driverDto) {
         Trip tripEntity = findTripEntityById(id);
         Driver driverEntity = driverService.findDriverEntityById(driverDto.driverId());
         tripEntity.reassignDriver(driverEntity);
@@ -70,7 +69,7 @@ public class TripService {
     }
 
     @Transactional
-    public TripResponseDto cancelTripById(Long id) {
+    public TripResponseDTO cancelTripById(Long id) {
         Trip tripEntity = findTripEntityById(id);
         tripEntity.cancel();
         

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record TripRequestDto(
+public record TripRequestDTO(
         @NotNull(message = "Driver ID is required.") 
         Long driverId,
         @NotNull(message = "Vehicle ID is required.") 

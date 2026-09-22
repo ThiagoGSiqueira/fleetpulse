@@ -10,9 +10,9 @@ import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.VehicleMapper;
 import com.fleetpulse.repository.VehicleRepository;
-import com.fleetpulse.web.dto.VehicleRequestDto;
-import com.fleetpulse.web.dto.VehicleRequestUpdateDto;
-import com.fleetpulse.web.dto.VehicleResponseDto;
+import com.fleetpulse.web.dto.VehicleRequestDTO;
+import com.fleetpulse.web.dto.VehicleRequestUpdateDTO;
+import com.fleetpulse.web.dto.VehicleResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +24,7 @@ public class VehicleService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public VehicleResponseDto createVehicle(VehicleRequestDto vehicleDto) {
+    public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleDto) {
         Vehicle vehicleEntity = vehicleMapper.toEntity(vehicleDto);
         if(vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())){
             throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", vehicleDto.licensePlate()));
@@ -34,7 +34,7 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public List<VehicleResponseDto> findAllVehicles() {
+    public List<VehicleResponseDTO> findAllVehicles() {
         return vehicleRepository.findAll()
         .stream()
         .map(vehicleMapper::toDto)
@@ -42,13 +42,13 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public VehicleResponseDto findVehicleById(Long id) {
+    public VehicleResponseDTO findVehicleById(Long id) {
         Vehicle vehicleEntity = findVehicleEntityById(id);
         return vehicleMapper.toDto(vehicleEntity);
     }
 
     @Transactional
-    public VehicleResponseDto updateVehicle(Long id, VehicleRequestUpdateDto vehicleDto) {
+    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestUpdateDTO vehicleDto) {
         Vehicle vehicleEntity = findVehicleEntityById(id);
         vehicleEntity.updateVehicleData(vehicleDto.licensePlate(), vehicleDto.model());
         vehicleRepository.save(vehicleEntity);
