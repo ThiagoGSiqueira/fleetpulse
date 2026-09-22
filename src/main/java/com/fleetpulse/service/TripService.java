@@ -12,10 +12,12 @@ import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.TripMapper;
 import com.fleetpulse.repository.TripRepository;
 import com.fleetpulse.web.dto.AssignDriverDTO;
+import com.fleetpulse.web.dto.AssignVehicleDTO;
 import com.fleetpulse.web.dto.BrasilApiDTO;
 import com.fleetpulse.web.dto.TripRequestDTO;
 import com.fleetpulse.web.dto.TripResponseDTO;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -69,6 +71,15 @@ public class TripService {
         return tripMapper.toDto(trip);
     }
 
+    @Transactional 
+    public TripResponseDTO reassignVehicle(Long id, AssignVehicleDTO request) {
+        Trip trip = findTripEntityById(id);
+        Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
+        trip.reassignVehicle(vehicle);
+
+        return tripMapper.toDto(trip);
+    }
+
     @Transactional
     public TripResponseDTO cancelTripById(Long id) {
         Trip trip = findTripEntityById(id);
@@ -82,4 +93,5 @@ public class TripService {
         return tripRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Trip with %s not found", id.toString())));
     }
+
 }

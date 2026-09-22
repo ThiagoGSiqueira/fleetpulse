@@ -139,6 +139,19 @@ public class Trip {
         this.driver = newDriver;
     }
 
+    public void reassignVehicle(Vehicle newVehicle) {
+        if(this.vehicle == newVehicle) {
+            throw new BusinessRuleException("Vehicle is already assigned to this trip.");
+        }
+        if(newVehicle.getStatus() != VehicleStatus.AVAILABLE) {
+            throw new BusinessRuleException("Vehicle is not available");
+        }
+
+        newVehicle.assignToTrip();
+        this.vehicle.makeAvailable();
+        this.vehicle = newVehicle;
+    }
+    
     public void cancel() {
         if(this.status == TripStatus.CANCELED) {
             throw new ConflictException(String.format("Trip with ID: %s is already canceled", this.getId().toString()));

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.TripService;
 import com.fleetpulse.web.dto.AssignDriverDTO;
+import com.fleetpulse.web.dto.AssignVehicleDTO;
 import com.fleetpulse.web.dto.TripRequestDTO;
 import com.fleetpulse.web.dto.TripResponseDTO;
 
@@ -28,8 +29,8 @@ public class TripController {
     private final TripService tripService;
 
     @PostMapping
-    public ResponseEntity<TripResponseDTO> createTrip(@Valid @RequestBody TripRequestDTO tripDto) {
-        TripResponseDTO response = tripService.createTrip(tripDto);
+    public ResponseEntity<TripResponseDTO> createTrip(@Valid @RequestBody TripRequestDTO request) {
+        TripResponseDTO response = tripService.createTrip(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -46,8 +47,14 @@ public class TripController {
     }
 
     @PutMapping ("/{id}/driver")
-    public ResponseEntity<TripResponseDTO> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO driverDto) {
-        TripResponseDTO response = tripService.reassignDriver(id, driverDto);
+    public ResponseEntity<TripResponseDTO> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO request) {
+        TripResponseDTO response = tripService.reassignDriver(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/vehicle")
+    public ResponseEntity<TripResponseDTO> reassignVehicle(@PathVariable Long id, @Valid @RequestBody AssignVehicleDTO request) {
+        TripResponseDTO response = tripService.reassignVehicle(id, request);
         return ResponseEntity.ok(response);
     }
 
