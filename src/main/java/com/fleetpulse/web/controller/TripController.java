@@ -17,6 +17,7 @@ import com.fleetpulse.service.TripService;
 import com.fleetpulse.web.dto.AssignDriverDTO;
 import com.fleetpulse.web.dto.AssignVehicleDTO;
 import com.fleetpulse.web.dto.TripRequestDTO;
+import com.fleetpulse.web.dto.TripRequestUpdateDTO;
 import com.fleetpulse.web.dto.TripResponseDTO;
 
 import jakarta.validation.Valid;
@@ -55,6 +56,12 @@ public class TripController {
     @PutMapping("/{id}/vehicle")
     public ResponseEntity<TripResponseDTO> reassignVehicle(@PathVariable Long id, @Valid @RequestBody AssignVehicleDTO request) {
         TripResponseDTO response = tripService.reassignVehicle(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/route")
+    public ResponseEntity<TripResponseDTO> updateRoute(@PathVariable Long id, @Valid @RequestBody TripRequestUpdateDTO request) {
+        TripResponseDTO response = tripService.updateRoute(id, request);
         return ResponseEntity.ok(response);
     }
 

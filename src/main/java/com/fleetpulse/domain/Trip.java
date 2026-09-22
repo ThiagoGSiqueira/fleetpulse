@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fleetpulse.exception.BusinessRuleException;
 import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.util.GeoUtils;
+import com.fleetpulse.web.dto.AddressData;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -122,16 +123,16 @@ public class Trip {
         this.destinationAddress = destinationAddress;
         this.destinationLatitude = destinationLatitude;
         this.destinationLongitude = destinationLongitude;
-        this.distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(this.originLatitude, this.originLongitude,
-                this.destinationLatitude, this.destinationLongitude);
-        this.status = TripStatus.PENDING;
+        this.distanceInKm = this.calculateRoadDistance();
+        this.status = TripStatus.IN_PROGRESS;
     }
 
     public void reassignDriver(Driver newDriver) {
-        if(this.driver == newDriver) {
+        this.validatePendingStatus();
+        if (this.driver == newDriver) {
             throw new BusinessRuleException("Driver is already assigned to this trip.");
         }
-        if(newDriver.getStatus() != DriverStatus.AVAILABLE) {
+        if (newDriver.getStatus() != DriverStatus.AVAILABLE) {
             throw new BusinessRuleException("Driver is not available.");
         }
         newDriver.assignToTrip();
@@ -140,10 +141,11 @@ public class Trip {
     }
 
     public void reassignVehicle(Vehicle newVehicle) {
-        if(this.vehicle == newVehicle) {
+        this.validatePendingStatus();
+        if (this.vehicle == newVehicle) {
             throw new BusinessRuleException("Vehicle is already assigned to this trip.");
         }
-        if(newVehicle.getStatus() != VehicleStatus.AVAILABLE) {
+        if (newVehicle.getStatus() != VehicleStatus.AVAILABLE) {
             throw new BusinessRuleException("Vehicle is not available");
         }
 
@@ -151,12 +153,46 @@ public class Trip {
         this.vehicle.makeAvailable();
         this.vehicle = newVehicle;
     }
-    
+
+    public void updateRoute(AddressData newOriginAddress, AddressData newDestinationAddress) {
+        this.validatePendingStatus();
+        if (newOriginAddress != null) {
+            this.originZipCode = newOriginAddress.zipCode();
+            this.originAddress = newOriginAddress.address();
+            this.originLatitude = newOriginAddress.latitude();
+            this.originLongitude = newOriginAddress.longitude();
+        }
+
+        if (newDestinationAddress != null) {
+            this.destinationZipCode = newDestinationAddress.zipCode();
+            this.destinationAddress = newDestinationAddress.address();
+            this.destinationLatitude = newDestinationAddress.latitude();
+            this.destinationLongitude = newDestinationAddress.longitude();
+        }
+
+        this.distanceInKm = this.calculateRoadDistance();
+    }
+
     public void cancel() {
-        if(this.status == TripStatus.CANCELED) {
-            throw new ConflictException(String.format("Trip with ID: %s is already canceled", this.getId().toString()));
+        if (this.status == TripStatus.CANCELED) {
+            throw new ConflictException(
+                    String.format("Trip with ID: %s is already canceled.", this.getId().toString()));
         }
         this.status = TripStatus.CANCELED;
     }
 
+    private double calculateRoadDistance() {
+        return GeoUtils.calculateEstimatedRoadDistanceInKm(
+                this.originLatitude,
+                this.originLongitude,
+                this.destinationLatitude,
+                this.destinationLongitude);
+    }
+
+    public void validatePendingStatus() {
+        if (this.status != TripStatus.PENDING) {
+            throw new BusinessRuleException("Only pending trips can be modified.");
+        }
+    }
+    
 }
