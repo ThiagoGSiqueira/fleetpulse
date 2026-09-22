@@ -24,13 +24,14 @@ public class VehicleService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleDto) {
-        Vehicle vehicleEntity = vehicleMapper.toEntity(vehicleDto);
-        if(vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())){
-            throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", vehicleDto.licensePlate()));
+    public VehicleResponseDTO createVehicle(VehicleRequestDTO request) {
+        Vehicle vehicle = vehicleMapper.toEntity(request);
+        if(vehicleRepository.existsByLicensePlate(request.licensePlate())){
+            throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", request.licensePlate()));
         }
-        vehicleRepository.save(vehicleEntity);
-        return vehicleMapper.toDto(vehicleEntity);
+
+        vehicleRepository.save(vehicle);
+        return vehicleMapper.toDto(vehicle);
     }
 
     @Transactional(readOnly = true)
@@ -43,23 +44,22 @@ public class VehicleService {
 
     @Transactional(readOnly = true)
     public VehicleResponseDTO findVehicleById(Long id) {
-        Vehicle vehicleEntity = findVehicleEntityById(id);
-        return vehicleMapper.toDto(vehicleEntity);
+        Vehicle vehicle = findVehicleEntityById(id);
+        return vehicleMapper.toDto(vehicle);
     }
 
     @Transactional
-    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestUpdateDTO vehicleDto) {
-        Vehicle vehicleEntity = findVehicleEntityById(id);
-        vehicleEntity.updateVehicleData(vehicleDto.licensePlate(), vehicleDto.model());
-        vehicleRepository.save(vehicleEntity);
-        return vehicleMapper.toDto(vehicleEntity);
+    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestUpdateDTO request) {
+        Vehicle vehicle = findVehicleEntityById(id);
+        vehicle.updateVehicleData(request.licensePlate(), request.model());
+
+        return vehicleMapper.toDto(vehicle);
     }
 
     @Transactional 
     public void deleteVehicle(Long id) {
-        Vehicle vehicleEntity = findVehicleEntityById(id);
-        vehicleEntity.deactivate();
-        vehicleRepository.save(vehicleEntity);
+        Vehicle vehicle = findVehicleEntityById(id);
+        vehicle.deactivate();
     }
 
     @Transactional(readOnly = true)
