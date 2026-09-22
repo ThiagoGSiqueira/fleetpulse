@@ -29,8 +29,8 @@ public class DriverController {
     private final DriverService driverService;
   
     @PostMapping
-    public ResponseEntity<DriverResponseDTO> createDriver(@Valid @RequestBody DriverRequestDTO driverDto) {
-        DriverResponseDTO response = driverService.createDriver(driverDto);
+    public ResponseEntity<DriverResponseDTO> createDriver(@Valid @RequestBody DriverRequestDTO request) {
+        DriverResponseDTO response = driverService.createDriver(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -47,8 +47,8 @@ public class DriverController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDTO driverDto) {
-        DriverResponseDTO response = driverService.updateDriver(id, driverDto);
+    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDTO request) {
+        DriverResponseDTO response = driverService.updateDriver(id, request);
         return ResponseEntity.ok(response);
     }
 

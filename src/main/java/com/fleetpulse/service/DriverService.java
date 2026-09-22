@@ -24,13 +24,15 @@ public class DriverService {
 
     // Create - Read - Update - Delete
     @Transactional
-    public DriverResponseDTO createDriver(DriverRequestDTO driverDto) {
-        if (driverRepository.existsByCnhNumber(driverDto.cnhNumber())) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already exists", driverDto.cnhNumber()));
+    public DriverResponseDTO createDriver(DriverRequestDTO request) {
+        if (driverRepository.existsByCnhNumber(request.cnhNumber())) {
+            throw new ConflictException(String.format("Driver with CNH '%s' already exists", request.cnhNumber()));
         }
-        Driver driverEntity = driverMapper.toEntity(driverDto);
-        driverRepository.save(driverEntity);
-        return driverMapper.toDto(driverEntity);
+
+        Driver driver = driverMapper.toEntity(request);
+        driverRepository.save(driver);
+
+        return driverMapper.toDto(driver);
     }
 
     @Transactional(readOnly = true)
@@ -42,23 +44,24 @@ public class DriverService {
 
     @Transactional(readOnly = true)
     public DriverResponseDTO findDriverById(Long id) {
-        Driver driverEntity = findDriverEntityById(id);
-        return driverMapper.toDto(driverEntity);
+        Driver driver = findDriverEntityById(id);
+
+        return driverMapper.toDto(driver);
     }
 
     @Transactional
-    public DriverResponseDTO updateDriver(Long id, DriverRequestUpdateDTO driverDto) {
-        Driver driverEntity = findDriverEntityById(id);
-        driverEntity.updatePersonalData(driverDto.name(), driverDto.cnhNumber());
-        driverRepository.save(driverEntity);
-        return driverMapper.toDto(driverEntity);
+    public DriverResponseDTO updateDriver(Long id, DriverRequestUpdateDTO request) {
+        Driver driver = findDriverEntityById(id);
+
+        driver.updatePersonalData(request.name(), request.cnhNumber());
+
+        return driverMapper.toDto(driver);
     }
 
     @Transactional
     public void deleteDriver(Long id) {
-        Driver driverEntity = findDriverEntityById(id);
-        driverEntity.deactivate();
-        driverRepository.save(driverEntity);
+        Driver driver = findDriverEntityById(id);
+        driver.deactivate();
     }
 
     @Transactional(readOnly = true)
