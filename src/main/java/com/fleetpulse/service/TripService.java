@@ -30,17 +30,17 @@ public class TripService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public TripResponseDTO createTrip(TripRequestDTO tripDto) {
-        Driver driverEntity = driverService.findDriverEntityById(tripDto.driverId());
-        Vehicle vehicleEntity = vehicleService.findVehicleEntityById(tripDto.vehicleId());
+    public TripResponseDTO createTrip(TripRequestDTO request) {
+        Driver driver = driverService.findDriverEntityById(request.driverId());
+        Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
 
-        driverEntity.assignToTrip();
-        vehicleEntity.assignToTrip();
+        driver.assignToTrip();
+        vehicle.assignToTrip();
 
-        BrasilApiDTO originBrasilApiAddress = brasilApiService.searchAddress(tripDto.originZipCode());
-        BrasilApiDTO destinationBrasilApiAddress = brasilApiService.searchAddress(tripDto.destinationZipCode());
+        BrasilApiDTO originBrasilApiAddress = brasilApiService.searchAddress(request.originZipCode());
+        BrasilApiDTO destinationBrasilApiAddress = brasilApiService.searchAddress(request.destinationZipCode());
 
-        Trip tripEntity = tripMapper.toEntity(tripDto, driverEntity, vehicleEntity, originBrasilApiAddress,
+        Trip tripEntity = tripMapper.toEntity(request, driver, vehicle, originBrasilApiAddress,
                 destinationBrasilApiAddress);
 
         tripRepository.save(tripEntity);
@@ -56,24 +56,25 @@ public class TripService {
 
     @Transactional(readOnly = true)
     public TripResponseDTO findTripById(Long id) {
-        Trip tripEntity = findTripEntityById(id);
-        return tripMapper.toDto(tripEntity);
+        Trip trip = findTripEntityById(id);
+        return tripMapper.toDto(trip);
     }
 
     @Transactional 
-    public TripResponseDTO reassignDriver(Long id, AssignDriverDTO driverDto) {
-        Trip tripEntity = findTripEntityById(id);
-        Driver driverEntity = driverService.findDriverEntityById(driverDto.driverId());
-        tripEntity.reassignDriver(driverEntity);
-        return tripMapper.toDto(tripEntity);
+    public TripResponseDTO reassignDriver(Long id, AssignDriverDTO request) {
+        Trip trip = findTripEntityById(id);
+        Driver driver = driverService.findDriverEntityById(request.driverId());
+        trip.reassignDriver(driver);
+    
+        return tripMapper.toDto(trip);
     }
 
     @Transactional
     public TripResponseDTO cancelTripById(Long id) {
-        Trip tripEntity = findTripEntityById(id);
-        tripEntity.cancel();
+        Trip trip = findTripEntityById(id);
+        trip.cancel();
         
-        return tripMapper.toDto(tripEntity);
+        return tripMapper.toDto(trip);
     }
 
     @Transactional(readOnly = true) 
