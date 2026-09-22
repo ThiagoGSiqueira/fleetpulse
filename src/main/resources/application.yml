@@ -4,10 +4,15 @@ spring:
     username: postgres
     password: postgrespassword
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     hibernate:
       ddl-auto: create
     show-sql: true
+    defer-datasource-initialization: true 
     properties:
       hibernate:
         format_sql: true
