@@ -36,7 +36,7 @@ public class DriverService {
     @Transactional(readOnly = true)
     public List<DriverResponseDto> findAllDrivers() {
         return driverRepository.findAll().stream()
-                .map(driverEntity -> driverMapper.toDto(driverEntity))
+                .map(driverMapper::toDto)
                 .toList();
     }
 

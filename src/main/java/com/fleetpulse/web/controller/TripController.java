@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.TripService;
+import com.fleetpulse.web.dto.AssignDriverDTO;
 import com.fleetpulse.web.dto.TripRequestDto;
 import com.fleetpulse.web.dto.TripResponseDto;
 
@@ -40,6 +42,12 @@ public class TripController {
     @GetMapping("/{id}")
     public ResponseEntity<TripResponseDto> getTripById(@PathVariable Long id) {
         TripResponseDto response = tripService.findTripById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping ("/{id}/driver")
+    public ResponseEntity<TripResponseDto> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO driverDto) {
+        TripResponseDto response = tripService.reassignDriver(id, driverDto);
         return ResponseEntity.ok(response);
     }
 

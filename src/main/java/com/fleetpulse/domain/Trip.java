@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fleetpulse.exception.BusinessRuleException;
 import com.fleetpulse.exception.ConflictException;
 import com.fleetpulse.util.GeoUtils;
 
@@ -124,6 +125,18 @@ public class Trip {
         this.distanceInKm = GeoUtils.calculateEstimatedRoadDistanceInKm(this.originLatitude, this.originLongitude,
                 this.destinationLatitude, this.destinationLongitude);
         this.status = TripStatus.PENDING;
+    }
+
+    public void reassignDriver(Driver newDriver) {
+        if(this.driver == newDriver) {
+            throw new BusinessRuleException("Driver is already assigned to this trip.");
+        }
+        if(newDriver.getStatus() != DriverStatus.AVAILABLE) {
+            throw new BusinessRuleException("Driver is not available.");
+        }
+        newDriver.assignToTrip();
+        this.driver.makeAvailable();
+        this.driver = newDriver;
     }
 
     public void cancel() {

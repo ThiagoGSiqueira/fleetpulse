@@ -11,10 +11,12 @@ import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.exception.ResourceNotFoundException;
 import com.fleetpulse.mapper.TripMapper;
 import com.fleetpulse.repository.TripRepository;
+import com.fleetpulse.web.dto.AssignDriverDTO;
 import com.fleetpulse.web.dto.BrasilApiDto;
 import com.fleetpulse.web.dto.TripRequestDto;
 import com.fleetpulse.web.dto.TripResponseDto;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -49,13 +51,21 @@ public class TripService {
     @Transactional(readOnly = true)
     public List<TripResponseDto> findAllTrips() {
         return tripRepository.findAll().stream()
-        .map(tripEntity -> tripMapper.toDto(tripEntity))
+        .map(tripMapper::toDto)
         .toList();
     }
 
     @Transactional(readOnly = true)
     public TripResponseDto findTripById(Long id) {
         Trip tripEntity = findTripEntityById(id);
+        return tripMapper.toDto(tripEntity);
+    }
+
+    @Transactional 
+    public TripResponseDto reassignDriver(Long id, AssignDriverDTO driverDto) {
+        Trip tripEntity = findTripEntityById(id);
+        Driver driverEntity = driverService.findDriverEntityById(driverDto.driverId());
+        tripEntity.reassignDriver(driverEntity);
         return tripMapper.toDto(tripEntity);
     }
 

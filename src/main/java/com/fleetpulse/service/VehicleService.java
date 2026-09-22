@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fleetpulse.domain.Vehicle;
 import com.fleetpulse.exception.ConflictException;
@@ -15,7 +14,6 @@ import com.fleetpulse.web.dto.VehicleRequestDto;
 import com.fleetpulse.web.dto.VehicleRequestUpdateDto;
 import com.fleetpulse.web.dto.VehicleResponseDto;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor 
@@ -26,7 +24,7 @@ public class VehicleService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public VehicleResponseDto createVehicle(@Valid @RequestBody VehicleRequestDto vehicleDto) {
+    public VehicleResponseDto createVehicle(VehicleRequestDto vehicleDto) {
         Vehicle vehicleEntity = vehicleMapper.toEntity(vehicleDto);
         if(vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())){
             throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", vehicleDto.licensePlate()));
@@ -39,7 +37,7 @@ public class VehicleService {
     public List<VehicleResponseDto> findAllVehicles() {
         return vehicleRepository.findAll()
         .stream()
-        .map(vehicle -> vehicleMapper.toDto(vehicle))
+        .map(vehicleMapper::toDto)
         .toList();
     }
 

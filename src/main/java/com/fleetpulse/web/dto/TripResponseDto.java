@@ -6,8 +6,8 @@ import com.fleetpulse.domain.TripStatus;
 
 public record TripResponseDto(
     Long id,
-    DriverResponseDto driverDto,
-    VehicleResponseDto vehicleDto,
+    DriverResponseDto driver,
+    VehicleResponseDto vehicle,
     String originZipCode,
     String originAddress,
     String destinationZipCode,
