@@ -1,1 +1,4 @@
 /home/thiago/Documents/Projects/fleetpulse/src/test/java/com/fleetpulse/FleetpulseApplicationTests.java
+/home/thiago/Documents/Projects/fleetpulse/src/test/java/com/fleetpulse/domain/DriverTest.java
+/home/thiago/Documents/Projects/fleetpulse/src/test/java/com/fleetpulse/domain/TripTest.java
+/home/thiago/Documents/Projects/fleetpulse/src/test/java/com/fleetpulse/domain/VehicleTest.java

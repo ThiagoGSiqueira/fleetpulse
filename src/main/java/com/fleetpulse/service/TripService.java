@@ -16,7 +16,6 @@ import com.fleetpulse.web.dto.AssignDriverDTO;
 import com.fleetpulse.web.dto.AssignVehicleDTO;
 import com.fleetpulse.web.dto.BrasilApiDTO;
 import com.fleetpulse.web.dto.TripRequestDTO;
-import com.fleetpulse.web.dto.TripRequestUpdateDTO;
 import com.fleetpulse.web.dto.TripResponseDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -28,20 +27,16 @@ public class TripService {
     private final DriverService driverService;
     private final VehicleService vehicleService;
     private final TripMapper tripMapper;
-    private final BrasilApiService brasilApiService;
 
     // Create - Read - Update - Delete
 
     @Transactional
-    public TripResponseDTO createTrip(TripRequestDTO request) {
+    public TripResponseDTO createTrip(TripRequestDTO request, BrasilApiDTO originBrasilApiAddress, BrasilApiDTO destinationBrasilApiAddress) {
         Driver driver = driverService.findDriverEntityById(request.driverId());
         Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
 
         driver.assignToTrip();
         vehicle.assignToTrip();
-
-        BrasilApiDTO originBrasilApiAddress = brasilApiService.searchAddress(request.originZipCode());
-        BrasilApiDTO destinationBrasilApiAddress = brasilApiService.searchAddress(request.destinationZipCode());
 
         Trip tripEntity = tripMapper.toEntity(request, driver, vehicle, originBrasilApiAddress,
                 destinationBrasilApiAddress);
@@ -84,15 +79,8 @@ public class TripService {
     }
 
     @Transactional
-    public TripResponseDTO updateRoute(Long id, TripRequestUpdateDTO request) {
+    public TripResponseDTO updateRoute(Long id, AddressData newOriginAddress, AddressData newDestinationAddress) {
         Trip trip = findTripEntityById(id);
-
-        AddressData newOriginAddress = request.originZipCode() != null
-                ? new AddressData(brasilApiService.searchAddress(request.originZipCode()))
-                : null;
-        AddressData newDestinationAddress = request.destinationZipCode() != null
-                ? new AddressData(brasilApiService.searchAddress(request.destinationZipCode()))
-                : null;
 
         trip.updateRoute(newOriginAddress, newDestinationAddress);
         return tripMapper.toDto(trip);

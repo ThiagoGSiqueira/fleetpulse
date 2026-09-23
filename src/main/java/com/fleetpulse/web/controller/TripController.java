@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fleetpulse.service.TripService;
+import com.fleetpulse.usecase.CreateTripUseCase;
+import com.fleetpulse.usecase.UpdateTripRouteUseCase;
 import com.fleetpulse.web.dto.AssignDriverDTO;
 import com.fleetpulse.web.dto.AssignVehicleDTO;
 import com.fleetpulse.web.dto.TripRequestDTO;
@@ -28,10 +30,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/trips")
 public class TripController {
     private final TripService tripService;
+    private final CreateTripUseCase createTripUseCase;
+    private final UpdateTripRouteUseCase updateTripRouteUseCase;
 
     @PostMapping
     public ResponseEntity<TripResponseDTO> createTrip(@Valid @RequestBody TripRequestDTO request) {
-        TripResponseDTO response = tripService.createTrip(request);
+        TripResponseDTO response = createTripUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -61,7 +65,7 @@ public class TripController {
 
     @PatchMapping("/{id}/route")
     public ResponseEntity<TripResponseDTO> updateRoute(@PathVariable Long id, @Valid @RequestBody TripRequestUpdateDTO request) {
-        TripResponseDTO response = tripService.updateRoute(id, request);
+        TripResponseDTO response = updateTripRouteUseCase.execute(id, request);
         return ResponseEntity.ok(response);
     }
 

@@ -1,1 +1,4 @@
+com/fleetpulse/domain/VehicleTest.class
 com/fleetpulse/FleetpulseApplicationTests.class
+com/fleetpulse/domain/DriverTest.class
+com/fleetpulse/domain/TripTest.class
