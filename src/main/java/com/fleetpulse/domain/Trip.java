@@ -129,7 +129,7 @@ public class Trip {
 
     public void reassignDriver(Driver newDriver) {
         this.validatePendingStatus();
-        if (this.driver == newDriver) {
+        if (this.driver.equals(newDriver)) {
             throw new BusinessRuleException("Driver is already assigned to this trip.");
         }
         if (newDriver.getStatus() != DriverStatus.AVAILABLE) {
@@ -142,7 +142,7 @@ public class Trip {
 
     public void reassignVehicle(Vehicle newVehicle) {
         this.validatePendingStatus();
-        if (this.vehicle == newVehicle) {
+        if (this.vehicle.equals(newVehicle)) {
             throw new BusinessRuleException("Vehicle is already assigned to this trip.");
         }
         if (newVehicle.getStatus() != VehicleStatus.AVAILABLE) {
@@ -194,5 +194,5 @@ public class Trip {
             throw new BusinessRuleException("Only pending trips can be modified.");
         }
     }
-    
+
 }

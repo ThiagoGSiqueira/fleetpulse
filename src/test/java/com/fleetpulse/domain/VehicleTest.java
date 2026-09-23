@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.fleetpulse.exception.ConflictException;
+import com.fleetpulse.exception.BusinessRuleException;
 
 public class VehicleTest {
     @Test
@@ -25,7 +25,7 @@ public class VehicleTest {
         Vehicle vehicle = new Vehicle("KGX8841", "Scania R450");
         vehicle.deactivate();
 
-        ConflictException ex = assertThrows(ConflictException.class, () -> {
+        BusinessRuleException ex = assertThrows(BusinessRuleException.class, () -> {
             vehicle.deactivate();
         });
 

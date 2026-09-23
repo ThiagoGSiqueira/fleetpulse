@@ -31,7 +31,7 @@ public class TripTest {
             trip.cancel();
         });
 
-        assertEquals(String.format("Trip with ID: %s is already cancelled.", trip.getId().toString()), ex.getMessage());
+        assertEquals(String.format("Trip with ID: %s is already canceled.", trip.getId().toString()), ex.getMessage());
     }
 
 

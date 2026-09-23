@@ -1,5 +1,7 @@
 package com.fleetpulse.domain;
 
+import java.util.Objects;
+
 import com.fleetpulse.exception.BusinessRuleException;
 import com.fleetpulse.exception.ConflictException;
 
@@ -102,5 +104,18 @@ public class Vehicle {
         if (this.status == VehicleStatus.INACTIVE) {
             throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
         }
+    }
+
+    @Override 
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || this.getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return Objects.equals(this.getId(), vehicle.getId());
+    }
+
+    @Override 
+    public int hashCode() {
+        return Objects.hash(this.getId());
     }
 }
