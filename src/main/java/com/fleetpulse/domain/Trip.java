@@ -124,7 +124,7 @@ public class Trip {
         this.destinationLatitude = destinationLatitude;
         this.destinationLongitude = destinationLongitude;
         this.distanceInKm = this.calculateRoadDistance();
-        this.status = TripStatus.IN_PROGRESS;
+        this.status = TripStatus.PENDING;
     }
 
     public void reassignDriver(Driver newDriver) {
@@ -179,6 +179,13 @@ public class Trip {
                     String.format("Trip with ID: %s is already canceled.", this.getId().toString()));
         }
         this.status = TripStatus.CANCELED;
+    }
+
+    public void startTrip() {
+        if(this.status != TripStatus.PENDING) {
+                    throw new BusinessRuleException(String.format("Trip with ID: %s cannot be started, status: %s", this.getId().toString(), this.getStatus()));
+        }
+        this.status = TripStatus.IN_PROGRESS;
     }
 
     private double calculateRoadDistance() {

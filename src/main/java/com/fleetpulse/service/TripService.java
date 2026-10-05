@@ -94,6 +94,14 @@ public class TripService {
         return tripMapper.toDto(trip);
     }
 
+    @Transactional
+    public TripResponseDTO startTripById(Long id) {
+        Trip trip = findTripEntityById(id);
+        trip.startTrip();
+
+        return tripMapper.toDto(trip);
+    }
+
     @Transactional(readOnly = true)
     public Trip findTripEntityById(Long id) {
         return tripRepository.findById(id)
