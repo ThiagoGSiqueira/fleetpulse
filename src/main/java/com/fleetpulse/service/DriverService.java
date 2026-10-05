@@ -24,7 +24,7 @@ public class DriverService {
 
     // Create - Read - Update - Delete
     @Transactional
-    public DriverResponseDTO createDriver(DriverRequestDTO request) {
+    public DriverResponseDTO create(DriverRequestDTO request) {
         if (driverRepository.existsByCnhNumber(request.cnhNumber())) {
             throw new ConflictException(String.format("Driver with CNH '%s' already exists", request.cnhNumber()));
         }
@@ -36,22 +36,22 @@ public class DriverService {
     }
 
     @Transactional(readOnly = true)
-    public List<DriverResponseDTO> findAllDrivers() {
+    public List<DriverResponseDTO> findAll() {
         return driverRepository.findAll().stream()
                 .map(driverMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public DriverResponseDTO findDriverById(Long id) {
-        Driver driver = findDriverEntityById(id);
+    public DriverResponseDTO findById(Long id) {
+        Driver driver = findEntityById(id);
 
         return driverMapper.toDto(driver);
     }
 
     @Transactional
-    public DriverResponseDTO updateDriver(Long id, DriverRequestUpdateDTO request) {
-        Driver driver = findDriverEntityById(id);
+    public DriverResponseDTO update(Long id, DriverRequestUpdateDTO request) {
+        Driver driver = findEntityById(id);
 
         driver.updatePersonalData(request.name(), request.cnhNumber());
 
@@ -59,13 +59,13 @@ public class DriverService {
     }
 
     @Transactional
-    public void deleteDriver(Long id) {
-        Driver driver = findDriverEntityById(id);
+    public void delete(Long id) {
+        Driver driver = findEntityById(id);
         driver.deactivate();
     }
 
     @Transactional(readOnly = true)
-    public Driver findDriverEntityById(Long id) {
+    public Driver findEntityById(Long id) {
         return driverRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Driver with ID: %s not found", id.toString())));
     }

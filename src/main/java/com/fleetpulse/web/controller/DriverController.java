@@ -30,31 +30,31 @@ public class DriverController {
   
     @PostMapping
     public ResponseEntity<DriverResponseDTO> createDriver(@Valid @RequestBody DriverRequestDTO request) {
-        DriverResponseDTO response = driverService.createDriver(request);
+        DriverResponseDTO response = driverService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<DriverResponseDTO>> getAllDrivers() {
-        List<DriverResponseDTO> response = driverService.findAllDrivers();
+        List<DriverResponseDTO> response = driverService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DriverResponseDTO> getDriverById(@PathVariable Long id) {
-        DriverResponseDTO response = driverService.findDriverById(id);
+        DriverResponseDTO response = driverService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverRequestUpdateDTO request) {
-        DriverResponseDTO response = driverService.updateDriver(id, request);
+        DriverResponseDTO response = driverService.update(id, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> inactivateDriver(@PathVariable Long id) {
-        driverService.deleteDriver(id);
+        driverService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
