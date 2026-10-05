@@ -31,7 +31,7 @@ public class TripService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public TripResponseDTO createTrip(TripRequestDTO request, BrasilApiDTO originBrasilApiAddress, BrasilApiDTO destinationBrasilApiAddress) {
+    public TripResponseDTO create(TripRequestDTO request, BrasilApiDTO originBrasilApiAddress, BrasilApiDTO destinationBrasilApiAddress) {
         Driver driver = driverService.findDriverEntityById(request.driverId());
         Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
 
@@ -46,21 +46,21 @@ public class TripService {
     }
 
     @Transactional(readOnly = true)
-    public List<TripResponseDTO> findAllTrips() {
+    public List<TripResponseDTO> findAll() {
         return tripRepository.findAll().stream()
                 .map(tripMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public TripResponseDTO findTripById(Long id) {
-        Trip trip = findTripEntityById(id);
+    public TripResponseDTO findById(Long id) {
+        Trip trip = findEntityById(id);
         return tripMapper.toDto(trip);
     }
 
     @Transactional
     public TripResponseDTO reassignDriver(Long id, AssignDriverDTO request) {
-        Trip trip = findTripEntityById(id);
+        Trip trip = findEntityById(id);
 
         Driver driver = driverService.findDriverEntityById(request.driverId());
         trip.reassignDriver(driver);
@@ -70,7 +70,7 @@ public class TripService {
 
     @Transactional
     public TripResponseDTO reassignVehicle(Long id, AssignVehicleDTO request) {
-        Trip trip = findTripEntityById(id);
+        Trip trip = findEntityById(id);
 
         Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
         trip.reassignVehicle(vehicle);
@@ -80,38 +80,38 @@ public class TripService {
 
     @Transactional
     public TripResponseDTO updateRoute(Long id, AddressData newOriginAddress, AddressData newDestinationAddress) {
-        Trip trip = findTripEntityById(id);
+        Trip trip = findEntityById(id);
 
         trip.updateRoute(newOriginAddress, newDestinationAddress);
         return tripMapper.toDto(trip);
     }
 
     @Transactional
-    public TripResponseDTO cancelTripById(Long id) {
-        Trip trip = findTripEntityById(id);
+    public TripResponseDTO cancel(Long id) {
+        Trip trip = findEntityById(id);
         trip.cancel();
 
         return tripMapper.toDto(trip);
     }
 
     @Transactional
-    public TripResponseDTO startTripById(Long id) {
-        Trip trip = findTripEntityById(id);
-        trip.startTrip();
+    public TripResponseDTO start(Long id) {
+        Trip trip = findEntityById(id);
+        trip.start();
 
         return tripMapper.toDto(trip);
     }
 
     @Transactional 
     public TripResponseDTO complete(Long id) {
-        Trip trip = findTripEntityById(id);
+        Trip trip = findEntityById(id);
         trip.complete();
 
         return tripMapper.toDto(trip);
     }
 
     @Transactional(readOnly = true)
-    public Trip findTripEntityById(Long id) {
+    public Trip findEntityById(Long id) {
         return tripRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(String.format("Trip with %s not found", id.toString())));

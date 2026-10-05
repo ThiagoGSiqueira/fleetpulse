@@ -181,7 +181,7 @@ public class Trip {
         this.status = TripStatus.CANCELED;
     }
 
-    public void startTrip() {
+    public void start() {
         if(this.status != TripStatus.PENDING) {
                     throw new BusinessRuleException(String.format("Trip with ID: %s cannot be started, status: %s", this.getId().toString(), this.getStatus()));
         }

@@ -21,6 +21,6 @@ public class CreateTripUseCase {
         BrasilApiDTO originBrasilApiAddress = brasilApiService.searchAddress(request.originZipCode());
         BrasilApiDTO destinationBrasilApiAddress = brasilApiService.searchAddress(request.destinationZipCode());
 
-        return tripService.createTrip(request, originBrasilApiAddress, destinationBrasilApiAddress);
+        return tripService.create(request, originBrasilApiAddress, destinationBrasilApiAddress);
     }
 }

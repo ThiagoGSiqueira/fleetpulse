@@ -41,13 +41,13 @@ public class TripController {
 
     @GetMapping
     public ResponseEntity<List<TripResponseDTO>> getAllTrips() {
-        List<TripResponseDTO> response = tripService.findAllTrips();
+        List<TripResponseDTO> response = tripService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TripResponseDTO> getTripById(@PathVariable Long id) {
-        TripResponseDTO response = tripService.findTripById(id);
+        TripResponseDTO response = tripService.findById(id);
         return ResponseEntity.ok(response);
     }
 
@@ -71,7 +71,7 @@ public class TripController {
 
     @PatchMapping("{id}/start")
     public ResponseEntity<TripResponseDTO> startTrip(@PathVariable Long id) {
-        TripResponseDTO response = tripService.startTripById(id);
+        TripResponseDTO response = tripService.start(id);
         return ResponseEntity.ok(response);
     }
 
@@ -83,7 +83,7 @@ public class TripController {
 
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<TripResponseDTO> cancelTrip(@PathVariable Long id) {
-        TripResponseDTO response = tripService.cancelTripById(id);
+        TripResponseDTO response = tripService.cancel(id);
         return ResponseEntity.ok(response);
     }
 }
