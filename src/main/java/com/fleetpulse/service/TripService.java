@@ -32,8 +32,8 @@ public class TripService {
 
     @Transactional
     public TripResponseDTO create(TripRequestDTO request, BrasilApiDTO originBrasilApiAddress, BrasilApiDTO destinationBrasilApiAddress) {
-        Driver driver = driverService.findDriverEntityById(request.driverId());
-        Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
+        Driver driver = driverService.findEntityById(request.driverId());
+        Vehicle vehicle = vehicleService.findEntityById(request.vehicleId());
 
         driver.assignToTrip();
         vehicle.assignToTrip();
@@ -62,7 +62,7 @@ public class TripService {
     public TripResponseDTO reassignDriver(Long id, AssignDriverDTO request) {
         Trip trip = findEntityById(id);
 
-        Driver driver = driverService.findDriverEntityById(request.driverId());
+        Driver driver = driverService.findEntityById(request.driverId());
         trip.reassignDriver(driver);
 
         return tripMapper.toDto(trip);
@@ -72,7 +72,7 @@ public class TripService {
     public TripResponseDTO reassignVehicle(Long id, AssignVehicleDTO request) {
         Trip trip = findEntityById(id);
 
-        Vehicle vehicle = vehicleService.findVehicleEntityById(request.vehicleId());
+        Vehicle vehicle = vehicleService.findEntityById(request.vehicleId());
         trip.reassignVehicle(vehicle);
 
         return tripMapper.toDto(trip);

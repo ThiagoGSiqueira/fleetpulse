@@ -29,31 +29,31 @@ public class VehicleController {
 
     @PostMapping
     public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO request) {
-        VehicleResponseDTO response = vehicleService.createVehicle(request);
+        VehicleResponseDTO response = vehicleService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     } 
 
     @GetMapping 
     public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
-        List<VehicleResponseDTO> response = vehicleService.findAllVehicles();
+        List<VehicleResponseDTO> response = vehicleService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Long id) {
-        VehicleResponseDTO response = vehicleService.findVehicleById(id);
+        VehicleResponseDTO response = vehicleService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDTO request) {
-        VehicleResponseDTO response = vehicleService.updateVehicle(id, request);
+        VehicleResponseDTO response = vehicleService.update(id, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
-        vehicleService.deleteVehicle(id);
+        vehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -24,7 +24,7 @@ public class VehicleService {
     // Create - Read - Update - Delete
 
     @Transactional
-    public VehicleResponseDTO createVehicle(VehicleRequestDTO request) {
+    public VehicleResponseDTO create(VehicleRequestDTO request) {
         Vehicle vehicle = vehicleMapper.toEntity(request);
         if(vehicleRepository.existsByLicensePlate(request.licensePlate())){
             throw new ConflictException(String.format("Vehicle with License Plate '%s' already exists", request.licensePlate()));
@@ -35,7 +35,7 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public List<VehicleResponseDTO> findAllVehicles() {
+    public List<VehicleResponseDTO> findAll() {
         return vehicleRepository.findAll()
         .stream()
         .map(vehicleMapper::toDto)
@@ -43,27 +43,27 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public VehicleResponseDTO findVehicleById(Long id) {
-        Vehicle vehicle = findVehicleEntityById(id);
+    public VehicleResponseDTO findById(Long id) {
+        Vehicle vehicle = findEntityById(id);
         return vehicleMapper.toDto(vehicle);
     }
 
     @Transactional
-    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestUpdateDTO request) {
-        Vehicle vehicle = findVehicleEntityById(id);
+    public VehicleResponseDTO update(Long id, VehicleRequestUpdateDTO request) {
+        Vehicle vehicle = findEntityById(id);
         vehicle.updateVehicleData(request.licensePlate(), request.model());
 
         return vehicleMapper.toDto(vehicle);
     }
 
     @Transactional 
-    public void deleteVehicle(Long id) {
-        Vehicle vehicle = findVehicleEntityById(id);
+    public void delete(Long id) {
+        Vehicle vehicle = findEntityById(id);
         vehicle.deactivate();
     }
 
     @Transactional(readOnly = true)
-    public Vehicle findVehicleEntityById(Long id) {
+    public Vehicle findEntityById(Long id) {
         return vehicleRepository.findById(id).
         orElseThrow(() -> new ResourceNotFoundException(String.format("Vehicle with ID: %s not found", id.toString())));
     }
