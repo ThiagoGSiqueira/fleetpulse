@@ -75,6 +75,12 @@ public class TripController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("{id}/endtrip")
+    public ResponseEntity<TripResponseDTO> completeTrip(@PathVariable Long id) {
+        TripResponseDTO response = tripService.complete(id);
+        return ResponseEntity.ok(response);
+    }
+
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<TripResponseDTO> cancelTrip(@PathVariable Long id) {
         TripResponseDTO response = tripService.cancelTripById(id);

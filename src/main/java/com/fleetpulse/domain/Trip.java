@@ -188,6 +188,13 @@ public class Trip {
         this.status = TripStatus.IN_PROGRESS;
     }
 
+    public void complete() {
+        if(this.status != TripStatus.IN_PROGRESS) {
+            throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s", this.getId().toString(), this.getStatus()));
+        }
+        this.status = TripStatus.COMPLETED;
+    }
+
     private double calculateRoadDistance() {
         return GeoUtils.calculateEstimatedRoadDistanceInKm(
                 this.originLatitude,
