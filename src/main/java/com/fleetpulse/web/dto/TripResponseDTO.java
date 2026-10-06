@@ -14,6 +14,7 @@ public record TripResponseDTO(
     String destinationAddress,
     Double distanceInKm,
     LocalDateTime startTime,
+    LocalDateTime endTime,
     TripStatus status
 ) {
 

@@ -30,6 +30,7 @@ public class TripMapper {
                                 tripEntity.getDestinationZipCode(),
                                 tripEntity.getDestinationAddress(), tripEntity.getDistanceInKm(),
                                 tripEntity.getStartTime(),
+                                tripEntity.getEndTime(),
                                 tripEntity.getStatus());
         }
 

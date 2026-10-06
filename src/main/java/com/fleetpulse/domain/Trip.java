@@ -178,6 +178,8 @@ public class Trip {
             throw new ConflictException(
                     String.format("Trip with ID: %s is already canceled.", this.getId().toString()));
         }
+        this.driver.makeAvailable();
+        this.vehicle.makeAvailable();
         this.status = TripStatus.CANCELED;
     }
 
@@ -185,6 +187,7 @@ public class Trip {
         if(this.status != TripStatus.PENDING) {
                     throw new BusinessRuleException(String.format("Trip with ID: %s cannot be started, status: %s", this.getId().toString(), this.getStatus()));
         }
+        this.startTime = LocalDateTime.now();
         this.status = TripStatus.IN_PROGRESS;
     }
 
@@ -192,6 +195,7 @@ public class Trip {
         if(this.status != TripStatus.IN_PROGRESS) {
             throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s", this.getId().toString(), this.getStatus()));
         }
+        this.endTime = LocalDateTime.now();
         this.status = TripStatus.COMPLETED;
     }
 
