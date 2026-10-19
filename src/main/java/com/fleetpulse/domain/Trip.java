@@ -195,6 +195,10 @@ public class Trip {
         if(this.status != TripStatus.IN_PROGRESS) {
             throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s", this.getId().toString(), this.getStatus()));
         }
+        
+        this.driver.makeAvailable();
+        this.vehicle.makeAvailable();
+
         this.endTime = LocalDateTime.now();
         this.status = TripStatus.COMPLETED;
     }
