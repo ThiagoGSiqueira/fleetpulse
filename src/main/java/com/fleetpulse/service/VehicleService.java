@@ -57,6 +57,14 @@ public class VehicleService {
     }
 
     @Transactional 
+    public VehicleResponseDTO sendToMaintenance(Long id) {
+        Vehicle vehicle = findEntityById(id);
+        vehicle.sendToMaintenance();
+
+        return vehicleMapper.toDto(vehicle);
+    }
+
+    @Transactional 
     public void delete(Long id) {
         Vehicle vehicle = findEntityById(id);
         vehicle.deactivate();

@@ -178,6 +178,10 @@ public class Trip {
             throw new ConflictException(
                     String.format("Trip with ID: %s is already canceled.", this.getId().toString()));
         }
+        if(this.status == TripStatus.COMPLETED) {
+            throw new BusinessRuleException("This trip is already completed and cannot be canceled.");
+        }
+
         this.driver.makeAvailable();
         this.vehicle.makeAvailable();
         this.status = TripStatus.CANCELED;
@@ -195,7 +199,7 @@ public class Trip {
         if(this.status != TripStatus.IN_PROGRESS) {
             throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s", this.getId().toString(), this.getStatus()));
         }
-        
+
         this.driver.makeAvailable();
         this.vehicle.makeAvailable();
 

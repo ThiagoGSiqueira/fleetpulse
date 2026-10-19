@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,6 +49,12 @@ public class VehicleController {
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDTO request) {
         VehicleResponseDTO response = vehicleService.update(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/maintenance")
+    public ResponseEntity<VehicleResponseDTO> sendToMaintenance(@PathVariable Long id) {
+        VehicleResponseDTO response = vehicleService.sendToMaintenance(id);
         return ResponseEntity.ok(response);
     }
 
