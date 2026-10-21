@@ -146,6 +146,12 @@ public class Trip {
         }
 
         this.driver.makeAvailable();
+        this.driver.incrementTripsSinceLastDayOff();
+
+        if (this.driver.shouldGoOffDuty()) {
+            this.driver.goOffDuty();
+        }
+
         this.vehicle.makeAvailable();
         this.vehicle.addKilometers(distanceInKm);
 

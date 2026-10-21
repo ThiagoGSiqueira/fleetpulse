@@ -49,6 +49,10 @@ public class Driver {
     @NotBlank
     private String cnhNumber;
 
+    @Column(nullable = false)
+    @NotNull
+    private Integer tripsSinceLastDayOff = 0;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -70,7 +74,8 @@ public class Driver {
     public void assignToTrip() {
         if (this.status != DriverStatus.AVAILABLE) {
             throw new BusinessRuleException(
-                    String.format("Driver with CNH '%s' cannot be assigned to a trip. Status: %s", this.getCnhNumber(), this.getStatus()));
+                    String.format("Driver with CNH '%s' cannot be assigned to a trip. Status: %s", this.getCnhNumber(),
+                            this.getStatus()));
         }
 
         this.status = DriverStatus.BUSY;
@@ -79,21 +84,35 @@ public class Driver {
     public void makeAvailable() {
         this.validateIsActive();
         if (this.status == DriverStatus.AVAILABLE) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already available. Status: %s", this.getCnhNumber(), this.getStatus()));
+            throw new ConflictException(String.format("Driver with CNH '%s' already available. Status: %s",
+                    this.getCnhNumber(), this.getStatus()));
         }
 
         this.status = DriverStatus.AVAILABLE;
     }
 
+    public void incrementTripsSinceLastDayOff() {
+        this.tripsSinceLastDayOff += 1;
+    }
+
+    // =========================================================================
+    // Off Duty Cycle
+    // =========================================================================
+
+    public boolean shouldGoOffDuty() {
+        return this.tripsSinceLastDayOff >= 3;
+    }
+
     public void goOffDuty() {
         this.validateIsActive();
         if (this.status == DriverStatus.OFF_DUTY) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already off duty. Status: %s", this.getCnhNumber(), this.getStatus()));
+            throw new ConflictException(String.format("Driver with CNH '%s' already off duty. Status: %s",
+                    this.getCnhNumber(), this.getStatus()));
         }
 
+        this.tripsSinceLastDayOff = 0;
         this.status = DriverStatus.OFF_DUTY;
     }
-
 
     // =========================================================================
     // Administrative Actions
@@ -101,7 +120,8 @@ public class Driver {
     public void updatePersonalData(String newName, String newCnhNumber) {
         if (this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(
-                    String.format("Driver with CNH '%s' cannot be modified. Status: %s", this.getCnhNumber(), this.getStatus()));
+                    String.format("Driver with CNH '%s' cannot be modified. Status: %s", this.getCnhNumber(),
+                            this.getStatus()));
         }
         if (newName != null) {
             this.name = newName;
@@ -115,7 +135,8 @@ public class Driver {
         this.validateIsActive();
         if (this.status == DriverStatus.BUSY) {
             throw new BusinessRuleException(
-                    String.format("Driver with CNH '%s' cannot be deactivated. Status: %s", this.getCnhNumber(), this.getStatus()));
+                    String.format("Driver with CNH '%s' cannot be deactivated. Status: %s", this.getCnhNumber(),
+                            this.getStatus()));
         }
 
         this.status = DriverStatus.INACTIVE;
@@ -126,7 +147,8 @@ public class Driver {
     // =========================================================================
     private void validateIsActive() {
         if (this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive. Status: %s", this.getCnhNumber(), this.getStatus()));
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive. Status: %s",
+                    this.getCnhNumber(), this.getStatus()));
         }
     }
 
