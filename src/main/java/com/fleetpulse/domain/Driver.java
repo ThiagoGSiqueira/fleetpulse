@@ -49,6 +49,10 @@ public class Driver {
     @NotBlank
     private String cnhNumber;
 
+    @Column(nullable = false)
+    @NotNull
+    private Integer tripsSinceLastDayOff = 0;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -83,6 +87,14 @@ public class Driver {
         }
 
         this.status = DriverStatus.AVAILABLE;
+    }
+
+    public void incrementTripsSinceLastDayOff() {
+        this.tripsSinceLastDayOff += 1;
+    }
+
+    public boolean shouldGoOffDuty() {
+        return this.tripsSinceLastDayOff >= 3;
     }
 
     public void goOffDuty() {
