@@ -34,8 +34,6 @@ import lombok.NoArgsConstructor;
 
 @Table(name = "drivers")
 public class Driver {
-    // Using SEQUENCE strategy to enable batching and improve performance with
-    // Spring Batch/Kafka over IDENTITY
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_seq_gen")
     @SequenceGenerator(name = "driver_seq_gen", sequenceName = "seq_driver", allocationSize = 50)
@@ -66,10 +64,44 @@ public class Driver {
         this.status = DriverStatus.AVAILABLE;
     }
 
+    // =========================================================================
+    // Operational Cycle
+    // =========================================================================
+    public void assignToTrip() {
+        if (this.status != DriverStatus.AVAILABLE) {
+            throw new BusinessRuleException(
+                    String.format("Driver with CNH '%s' cannot be assigned to a trip. Status: %s", this.getCnhNumber(), this.getStatus()));
+        }
+
+        this.status = DriverStatus.BUSY;
+    }
+
+    public void makeAvailable() {
+        this.validateIsActive();
+        if (this.status == DriverStatus.AVAILABLE) {
+            throw new ConflictException(String.format("Driver with CNH '%s' already available. Status: %s", this.getCnhNumber(), this.getStatus()));
+        }
+
+        this.status = DriverStatus.AVAILABLE;
+    }
+
+    public void goOffDuty() {
+        this.validateIsActive();
+        if (this.status == DriverStatus.OFF_DUTY) {
+            throw new ConflictException(String.format("Driver with CNH '%s' already off duty. Status: %s", this.getCnhNumber(), this.getStatus()));
+        }
+
+        this.status = DriverStatus.OFF_DUTY;
+    }
+
+
+    // =========================================================================
+    // Administrative Actions
+    // =========================================================================
     public void updatePersonalData(String newName, String newCnhNumber) {
         if (this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(
-                    String.format("Driver with CNH '%s' cannot be modified", this.getCnhNumber()));
+                    String.format("Driver with CNH '%s' cannot be modified. Status: %s", this.getCnhNumber(), this.getStatus()));
         }
         if (newName != null) {
             this.name = newName;
@@ -83,53 +115,32 @@ public class Driver {
         this.validateIsActive();
         if (this.status == DriverStatus.BUSY) {
             throw new BusinessRuleException(
-                    String.format("Driver with CNH '%s' cannot be deactivate", this.getCnhNumber()));
+                    String.format("Driver with CNH '%s' cannot be deactivated. Status: %s", this.getCnhNumber(), this.getStatus()));
         }
-        
+
         this.status = DriverStatus.INACTIVE;
     }
 
-    public void assignToTrip() {
-        if (this.status != DriverStatus.AVAILABLE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' cannot be assigned to a trip", this.getCnhNumber()));
-        }
-
-        this.status = DriverStatus.BUSY;
-    }
-
-    public void makeAvailable() {
-        this.validateIsActive();
-        if (this.status == DriverStatus.AVAILABLE) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already available", this.getCnhNumber()));
-        }
-
-        this.status = DriverStatus.AVAILABLE;
-    }
-
-    public void goOffDuty() {
-        this.validateIsActive();
-        if (this.status == DriverStatus.OFF_DUTY) {
-            throw new ConflictException(String.format("Driver with CNH '%s' already off duty", this.getCnhNumber()));
-        }
-
-        this.status = DriverStatus.OFF_DUTY;
-    }
-
-    public void validateIsActive() {
+    // =========================================================================
+    // Private Validations
+    // =========================================================================
+    private void validateIsActive() {
         if (this.status == DriverStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive.", this.getCnhNumber()));
+            throw new BusinessRuleException(String.format("Driver with CNH '%s' is inactive. Status: %s", this.getCnhNumber(), this.getStatus()));
         }
     }
 
-    @Override 
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Driver driver = (Driver) o;  
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Driver driver = (Driver) o;
         return Objects.equals(this.getId(), driver.getId());
     }
 
-    @Override 
+    @Override
     public int hashCode() {
         return Objects.hash(this.getId());
     }
