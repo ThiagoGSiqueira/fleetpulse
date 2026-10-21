@@ -52,12 +52,6 @@ public class VehicleController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/maintenance")
-    public ResponseEntity<VehicleResponseDTO> sendToMaintenance(@PathVariable Long id) {
-        VehicleResponseDTO response = vehicleService.sendToMaintenance(id);
-        return ResponseEntity.ok(response);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
         vehicleService.delete(id);
