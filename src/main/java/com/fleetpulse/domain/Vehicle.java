@@ -56,52 +56,35 @@ public class Vehicle {
         this.model = model;
     }
 
-    public void updateVehicleData(String newLicensePlate, String newModel) {
-        if (this.status == VehicleStatus.INACTIVE) {
-            throw new BusinessRuleException(
-                    String.format("Vehicle with License Plate '%s' cannot be modified", this.getLicensePlate()));
-        }
-        if (newLicensePlate != null) {
-            this.licensePlate = newLicensePlate;
-        }
-        if (newModel != null) {
-            this.model = newModel;
-        }
-    }
-
-    public void deactivate() {
-        this.validateIsActive();
-        if (this.status == VehicleStatus.BUSY) {
-            throw new BusinessRuleException(
-                    String.format("Vehicle with License Plate '%s' cannot be deactivate", this.getLicensePlate()));
-        }
-
-        this.status = VehicleStatus.INACTIVE;
-    }
-
+    // =========================================================================
+    // Operational Cycle
+    // =========================================================================
     public void assignToTrip() {
         if (this.status != VehicleStatus.AVAILABLE) {
             throw new BusinessRuleException(String
-                    .format("Vehicle with License Plate '%s' cannot be assigned to a trip", this.getLicensePlate()));
+                    .format("Vehicle with License Plate '%s' cannot be assigned to a trip. Status: %s", this.getLicensePlate(), this.getStatus()));
         }
 
         this.status = VehicleStatus.BUSY;
-    }
-
-    public void makeAvailable() {
-        validateIsActive();
-        if (this.status == VehicleStatus.AVAILABLE) {
-            throw new ConflictException(
-                    String.format("Vehicle with License Plate '%s' already available", this.getLicensePlate()));
-        }
-
-        this.status = VehicleStatus.AVAILABLE;
     }
 
     public void addKilometers(Double km) {
         this.kmSinceLastMaintenance += km;
     }
 
+    public void makeAvailable() {
+        validateIsActive();
+        if (this.status == VehicleStatus.AVAILABLE) {
+            throw new ConflictException(
+                    String.format("Vehicle with License Plate '%s' already available. Status: %s", this.getLicensePlate(), this.getStatus()));
+        }
+
+        this.status = VehicleStatus.AVAILABLE;
+    }
+
+    // =========================================================================
+    // Maintenance Cycle 
+    // =========================================================================
     public boolean shouldSendToMaintenance() {
         return this.kmSinceLastMaintenance >= 5000.0;
     }
@@ -119,17 +102,47 @@ public class Vehicle {
     public void finishMaintenance() {
         if (this.status != VehicleStatus.MAINTENANCE) {
             throw new BusinessRuleException(
-                    String.format("Vehicle with License Plate '%s' is not in maintenance. Status: %s", this.getLicensePlate(), this.getStatus()));
+                    String.format("Vehicle with License Plate '%s' is not in maintenance. Status: %s",
+                            this.getLicensePlate(), this.getStatus()));
         }
 
         this.kmSinceLastMaintenance = 0.0;
         this.status = VehicleStatus.AVAILABLE;
     }
 
-    public void validateIsActive() {
+    // =========================================================================
+    // Administrative Actions 
+    // =========================================================================
+    public void updateVehicleData(String newLicensePlate, String newModel) {
         if (this.status == VehicleStatus.INACTIVE) {
             throw new BusinessRuleException(
-                    String.format("Vehicle with License Plate '%s' is already deactivated.", this.getLicensePlate()));
+                    String.format("Vehicle with License Plate '%s' cannot be modified. Status: %s", this.getLicensePlate(), this.getStatus()));
+        }
+        if (newLicensePlate != null) {
+            this.licensePlate = newLicensePlate;
+        }
+        if (newModel != null) {
+            this.model = newModel;
+        }
+    }
+
+    public void deactivate() {
+        this.validateIsActive();
+        if (this.status == VehicleStatus.BUSY) {
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' cannot be deactivated. Status: %s", this.getLicensePlate(), this.getStatus()));
+        }
+
+        this.status = VehicleStatus.INACTIVE;
+    }
+
+    // =========================================================================  
+    // Private Validations
+    // =========================================================================
+    private void validateIsActive() {
+        if (this.status == VehicleStatus.INACTIVE) {
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' is already deactivated. Status: %s", this.getLicensePlate(), this.getStatus()));
         }
     }
 
