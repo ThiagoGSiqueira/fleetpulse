@@ -34,6 +34,9 @@ import lombok.NoArgsConstructor;
 
 @Table(name = "drivers")
 public class Driver {
+
+    private static final int MAX_TRIPS_BEFORE_OFF_DUTY = 3;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_seq_gen")
     @SequenceGenerator(name = "driver_seq_gen", sequenceName = "seq_driver", allocationSize = 50)
@@ -91,16 +94,16 @@ public class Driver {
         this.status = DriverStatus.AVAILABLE;
     }
 
-    public void incrementTripsSinceLastDayOff() {
-        this.tripsSinceLastDayOff += 1;
-    }
-
     // =========================================================================
     // Off Duty Cycle
     // =========================================================================
 
+    public void incrementTripsSinceLastDayOff() {
+        this.tripsSinceLastDayOff += 1;
+    }
+
     public boolean shouldGoOffDuty() {
-        return this.tripsSinceLastDayOff >= 3;
+        return this.tripsSinceLastDayOff >= MAX_TRIPS_BEFORE_OFF_DUTY;
     }
 
     public void goOffDuty() {

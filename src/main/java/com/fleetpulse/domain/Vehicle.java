@@ -26,8 +26,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
-    // Using SEQUENCE strategy to enable batching and improve performance with
-    // Spring Batch/Kafka over IDENTITY
+    
+    private static final double MAINTENANCE_KM_THRESHOLD = 5000.00;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq_gen")
     @SequenceGenerator(name = "vehicle_seq_gen", sequenceName = "seq_vehicle", allocationSize = 50)
@@ -88,7 +89,7 @@ public class Vehicle {
     // Maintenance Cycle
     // =========================================================================
     public boolean shouldSendToMaintenance() {
-        return this.kmSinceLastMaintenance >= 5000.0;
+        return this.kmSinceLastMaintenance >= MAINTENANCE_KM_THRESHOLD;
     }
 
     public void sendToMaintenance() {
