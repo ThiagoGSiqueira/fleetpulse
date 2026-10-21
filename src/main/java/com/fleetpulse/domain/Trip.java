@@ -127,13 +127,59 @@ public class Trip {
         this.status = TripStatus.PENDING;
     }
 
+    // =========================================================================
+    // Lifecycle & Core Operations
+    // =========================================================================
+    public void start() {
+        if (this.status != TripStatus.PENDING) {
+            throw new BusinessRuleException(String.format("Trip with ID: %s cannot be started, status: %s",
+                    this.getId().toString(), this.getStatus()));
+        }
+        this.startTime = LocalDateTime.now();
+        this.status = TripStatus.IN_PROGRESS;
+    }
+
+    public void complete() {
+        if (this.status != TripStatus.IN_PROGRESS) {
+            throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s",
+                    this.getId().toString(), this.getStatus()));
+        }
+
+        this.driver.makeAvailable();
+        this.vehicle.makeAvailable();
+        this.vehicle.addKilometers(distanceInKm);
+
+        if (this.vehicle.shouldSendToMaintenance()) {
+            this.vehicle.sendToMaintenance();
+        }
+        this.endTime = LocalDateTime.now();
+        this.status = TripStatus.COMPLETED;
+    }
+
+    public void cancel() {
+        if (this.status == TripStatus.CANCELED) {
+            throw new ConflictException(
+                    String.format("Trip with ID: %s is already canceled. Status: %s", this.getId().toString(), this.getStatus()));
+        }
+        if (this.status == TripStatus.COMPLETED) {
+            throw new BusinessRuleException(String.format("This trip is already completed and cannot be canceled. Status: %s", this.getStatus()));
+        }
+
+        this.driver.makeAvailable();
+        this.vehicle.makeAvailable();
+        this.status = TripStatus.CANCELED;
+    }
+
+    // =========================================================================
+    // Reassignments & Modifications
+    // =========================================================================
     public void reassignDriver(Driver newDriver) {
         this.validatePendingStatus();
         if (this.driver.equals(newDriver)) {
             throw new BusinessRuleException("Driver is already assigned to this trip.");
         }
         if (newDriver.getStatus() != DriverStatus.AVAILABLE) {
-            throw new BusinessRuleException("Driver is not available.");
+            throw new BusinessRuleException(String.format("Driver is not available. Status: %s", newDriver.getStatus()));
         }
         newDriver.assignToTrip();
         this.driver.makeAvailable();
@@ -146,7 +192,7 @@ public class Trip {
             throw new BusinessRuleException("Vehicle is already assigned to this trip.");
         }
         if (newVehicle.getStatus() != VehicleStatus.AVAILABLE) {
-            throw new BusinessRuleException("Vehicle is not available");
+            throw new BusinessRuleException(String.format("Vehicle is not available. Status: %s", newVehicle.getStatus()));
         }
 
         newVehicle.assignToTrip();
@@ -173,43 +219,9 @@ public class Trip {
         this.distanceInKm = this.calculateRoadDistance();
     }
 
-    public void cancel() {
-        if (this.status == TripStatus.CANCELED) {
-            throw new ConflictException(
-                    String.format("Trip with ID: %s is already canceled.", this.getId().toString()));
-        }
-        if(this.status == TripStatus.COMPLETED) {
-            throw new BusinessRuleException("This trip is already completed and cannot be canceled.");
-        }
-
-        this.driver.makeAvailable();
-        this.vehicle.makeAvailable();
-        this.status = TripStatus.CANCELED;
-    }
-
-    public void start() {
-        if(this.status != TripStatus.PENDING) {
-                    throw new BusinessRuleException(String.format("Trip with ID: %s cannot be started, status: %s", this.getId().toString(), this.getStatus()));
-        }
-        this.startTime = LocalDateTime.now();
-        this.status = TripStatus.IN_PROGRESS;
-    }
-
-    public void complete() {
-        if(this.status != TripStatus.IN_PROGRESS) {
-            throw new BusinessRuleException(String.format("Trip with ID: %s cannot be completed, status: %s", this.getId().toString(), this.getStatus()));
-        }
-
-        this.driver.makeAvailable();
-        this.vehicle.makeAvailable();
-        this.vehicle.addKilometers(distanceInKm);
-
-        if(this.vehicle.shouldSendToMaintenance()) {
-            this.vehicle.sendToMaintenance();
-        }
-        this.endTime = LocalDateTime.now();
-        this.status = TripStatus.COMPLETED;
-    }
+    // =========================================================================
+    // Internal Rules & Calculations
+    // =========================================================================
 
     private double calculateRoadDistance() {
         return GeoUtils.calculateEstimatedRoadDistanceInKm(
@@ -219,7 +231,7 @@ public class Trip {
                 this.destinationLongitude);
     }
 
-    public void validatePendingStatus() {
+    private void validatePendingStatus() {
         if (this.status != TripStatus.PENDING) {
             throw new BusinessRuleException("Only pending trips can be modified.");
         }
