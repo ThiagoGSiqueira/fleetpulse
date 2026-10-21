@@ -41,6 +41,10 @@ public class Vehicle {
     @NotBlank
     private String model;
 
+    @Column(nullable = false)
+    @NotNull
+    private Double kmSinceLastMaintenance = 0.0;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -68,9 +72,10 @@ public class Vehicle {
     public void deactivate() {
         this.validateIsActive();
         if (this.status == VehicleStatus.BUSY) {
-            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be deactivate", this.getLicensePlate()));
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' cannot be deactivate", this.getLicensePlate()));
         }
-        
+
         this.status = VehicleStatus.INACTIVE;
     }
 
@@ -86,15 +91,26 @@ public class Vehicle {
     public void makeAvailable() {
         validateIsActive();
         if (this.status == VehicleStatus.AVAILABLE) {
-            throw new ConflictException(String.format("Vehicle with License Plate '%s' already available", this.getLicensePlate()));
+            throw new ConflictException(
+                    String.format("Vehicle with License Plate '%s' already available", this.getLicensePlate()));
         }
 
         this.status = VehicleStatus.AVAILABLE;
     }
 
+    public void addKilometers(Double km) {
+        this.kmSinceLastMaintenance += km;
+    }
+
+    public boolean shouldSendToMaintenance() {
+        return this.kmSinceLastMaintenance >= 5000.0;
+    }
+
     public void sendToMaintenance() {
         if (this.status != VehicleStatus.AVAILABLE) {
-            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' cannot be sent to maintenance.", this.getLicensePlate()));
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' cannot be sent to maintenance. Status: %s",
+                            this.getLicensePlate(), this.getStatus()));
         }
 
         this.status = VehicleStatus.MAINTENANCE;
@@ -102,19 +118,22 @@ public class Vehicle {
 
     public void validateIsActive() {
         if (this.status == VehicleStatus.INACTIVE) {
-            throw new BusinessRuleException(String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
         }
     }
 
-    @Override 
+    @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || this.getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || this.getClass() != o.getClass())
+            return false;
         Vehicle vehicle = (Vehicle) o;
         return Objects.equals(this.getId(), vehicle.getId());
     }
 
-    @Override 
+    @Override
     public int hashCode() {
         return Objects.hash(this.getId());
     }

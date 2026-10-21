@@ -202,7 +202,11 @@ public class Trip {
 
         this.driver.makeAvailable();
         this.vehicle.makeAvailable();
+        this.vehicle.addKilometers(distanceInKm);
 
+        if(this.vehicle.shouldSendToMaintenance()) {
+            this.vehicle.sendToMaintenance();
+        }
         this.endTime = LocalDateTime.now();
         this.status = TripStatus.COMPLETED;
     }

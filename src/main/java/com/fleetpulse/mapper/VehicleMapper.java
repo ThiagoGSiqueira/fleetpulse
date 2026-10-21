@@ -10,7 +10,7 @@ import com.fleetpulse.web.dto.VehicleResponseDTO;
 public class VehicleMapper {
     public VehicleResponseDTO toDto(Vehicle vehicleEntity) {
         return new VehicleResponseDTO(vehicleEntity.getId(), vehicleEntity.getLicensePlate(), vehicleEntity.getModel(),
-                vehicleEntity.getStatus());
+                vehicleEntity.getKmSinceLastMaintenance(), vehicleEntity.getStatus());
     }
 
     public Vehicle toEntity(VehicleRequestDTO vehicleDto) {
