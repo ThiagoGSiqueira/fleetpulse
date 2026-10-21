@@ -57,10 +57,9 @@ public class VehicleService {
     }
 
     @Transactional 
-    public VehicleResponseDTO sendToMaintenance(Long id) {
+    public VehicleResponseDTO finishMaintenance(Long id) {
         Vehicle vehicle = findEntityById(id);
-        vehicle.sendToMaintenance();
-
+        vehicle.finishMaintenance();
         return vehicleMapper.toDto(vehicle);
     }
 

@@ -116,10 +116,20 @@ public class Vehicle {
         this.status = VehicleStatus.MAINTENANCE;
     }
 
+    public void finishMaintenance() {
+        if (this.status != VehicleStatus.MAINTENANCE) {
+            throw new BusinessRuleException(
+                    String.format("Vehicle with License Plate '%s' is not in maintenance. Status: %s", this.getLicensePlate(), this.getStatus()));
+        }
+
+        this.kmSinceLastMaintenance = 0.0;
+        this.status = VehicleStatus.AVAILABLE;
+    }
+
     public void validateIsActive() {
         if (this.status == VehicleStatus.INACTIVE) {
             throw new BusinessRuleException(
-                    String.format("Vehicle with License Plate '%s' is already deactivated", this.getLicensePlate()));
+                    String.format("Vehicle with License Plate '%s' is already deactivated.", this.getLicensePlate()));
         }
     }
 
