@@ -117,6 +117,10 @@ public class Driver {
         this.status = DriverStatus.OFF_DUTY;
     }
 
+    public void resumeDuty() {
+        this.status = DriverStatus.AVAILABLE;
+    }
+
     // =========================================================================
     // Administrative Actions
     // =========================================================================
