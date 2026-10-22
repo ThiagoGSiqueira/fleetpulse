@@ -49,6 +49,15 @@ public class DriverService {
         return driverMapper.toDto(driver);
     }
 
+    @Transactional 
+    public DriverResponseDTO resumeDuty(Long id) {
+        Driver driver = findEntityById(id);
+    
+        driver.resumeDuty();
+
+        return driverMapper.toDto(driver);
+    }
+
     @Transactional
     public DriverResponseDTO update(Long id, DriverRequestUpdateDTO request) {
         Driver driver = findEntityById(id);
@@ -67,6 +76,8 @@ public class DriverService {
     @Transactional(readOnly = true)
     public Driver findEntityById(Long id) {
         return driverRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Driver with ID: %s not found", id.toString())));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Driver with ID: %s not found", id.toString())));
     }
+
 }

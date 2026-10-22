@@ -29,7 +29,7 @@ public class DriverTest {
             BusinessRuleException.class, () -> driver.deactivate()
         );
 
-        assertEquals(String.format("Driver with CNH '%s' is inactive.", driver.getCnhNumber()), ex.getMessage());
+        assertEquals(String.format("Driver with CNH '%s' is inactive. Status: %s", driver.getCnhNumber(), driver.getStatus()), ex.getMessage());
     }
 
     @Test
