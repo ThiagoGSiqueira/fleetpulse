@@ -3,5 +3,5 @@ package com.fleetpulse.domain;
 public enum UserRole {
     ROLE_DRIVER,
     ROLE_MANAGER,
-    ROLE_aDMIN
+    ROLE_ADMIN
 }
