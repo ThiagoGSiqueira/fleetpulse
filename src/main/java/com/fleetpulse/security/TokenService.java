@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.fleetpulse.domain.User;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -44,16 +45,28 @@ public class TokenService {
         return token;
     }
 
+    public Claims extractAllClaims(String token) {
+        return Jwts.parser()
+        .verifyWith(getSigning())
+        .build()
+        .parseSignedClaims(token)
+        .getPayload();
+    }
+
     public boolean validateToken(String token) {
         try {   
-            Jwts.parser()
-            .verifyWith(getSigning())
-            .build()
-            .parseSignedClaims(token);
-
+            extractAllClaims(token);
             return true;
         } catch (JwtException e) {
             return false;
         }
+    }
+
+    public String getSubjectFromToken(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String getRoleFromToken(String token) {
+        return extractAllClaims(token).get("role", String.class);
     }
 }
