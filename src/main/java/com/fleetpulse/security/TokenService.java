@@ -1,8 +1,6 @@
 package com.fleetpulse.security;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.time.Instant;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.fleetpulse.domain.User;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -43,5 +42,18 @@ public class TokenService {
                 .compact();
 
         return token;
+    }
+
+    public boolean validateToken(String token) {
+        try {   
+            Jwts.parser()
+            .verifyWith(getSigning())
+            .build()
+            .parseSignedClaims(token);
+
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }
