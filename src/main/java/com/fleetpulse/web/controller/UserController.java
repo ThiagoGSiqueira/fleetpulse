@@ -1,6 +1,7 @@
 package com.fleetpulse.web.controller;
 
 import com.fleetpulse.service.UserService;
+import com.fleetpulse.web.dto.UserLoginRequestDTO;
 import com.fleetpulse.web.dto.UserRegisterRequestDTO;
 import com.fleetpulse.web.dto.UserResponseDTO;
 
@@ -28,4 +29,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO request) {
+        UserResponseDTO response = userService.login(request);
+        return ResponseEntity.ok(response);
+    }
 }
