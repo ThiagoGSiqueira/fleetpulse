@@ -37,7 +37,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping
     public ResponseEntity<List<DriverResponseDTO>> getAllDrivers() {
         List<DriverResponseDTO> response = driverService.findAll();

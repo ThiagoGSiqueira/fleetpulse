@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,8 @@ public class UserController {
 
     private final UserService userService;
 
+    // só ADMIN cria usuários; o primeiro admin nasce no AdminSeeder
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<UserResponseRegisterDTO> register(@Valid @RequestBody UserRegisterRequestDTO request) {
         UserResponseRegisterDTO response = userService.register(request); 

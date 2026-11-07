@@ -36,8 +36,10 @@ public class TripTest {
 
 
     private Trip createValidTrip() {
+        User userDriver = new User("Thiago", "thiago@gmail.com", "thiago", UserRole.ROLE_DRIVER);
+
          Trip trip = Trip.builder()
-        .driver(new Driver("Isabele", "123456")) // ou a instância/mock de Driver que você usar no teste
+        .driver(new Driver(userDriver, "123456")) // ou a instância/mock de Driver que você usar no teste
         .vehicle(new Vehicle("BRA2E19", "Mercedes-Benz Actros"))
         .originZipCode("01310-100")
         .originAddress("Av. Paulista, 1000 - São Paulo, SP")

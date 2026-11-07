@@ -17,6 +17,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -42,10 +44,9 @@ public class Driver {
     @SequenceGenerator(name = "driver_seq_gen", sequenceName = "seq_driver", allocationSize = 50)
     private Long id;
 
-    @Column(nullable = false, length = 40)
-    @Size(min = 3, max = 40)
-    @NotBlank
-    private String name;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     @Column(unique = true, nullable = false, length = 6)
     @Size(min = 6, max = 6)
@@ -65,8 +66,8 @@ public class Driver {
     private LocalDateTime creationDate;
 
     @Builder
-    public Driver(String name, String cnhNumber) {
-        this.name = name;
+    public Driver(User user, String cnhNumber) {
+        this.user = user;
         this.cnhNumber = cnhNumber;
         this.status = DriverStatus.AVAILABLE;
     }
@@ -124,14 +125,11 @@ public class Driver {
     // =========================================================================
     // Administrative Actions
     // =========================================================================
-    public void updatePersonalData(String newName, String newCnhNumber) {
+    public void updatePersonalData(String newCnhNumber) {
         if (this.status == DriverStatus.INACTIVE) {
             throw new BusinessRuleException(
                     String.format("Driver with CNH '%s' cannot be modified. Status: %s", this.getCnhNumber(),
                             this.getStatus()));
-        }
-        if (newName != null) {
-            this.name = newName;
         }
         if (newCnhNumber != null) {
             this.cnhNumber = newCnhNumber;

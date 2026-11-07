@@ -9,13 +9,12 @@ import com.fleetpulse.web.dto.DriverResponseDTO;
 @Component
 public class DriverMapper {
     public DriverResponseDTO toDto(Driver driverEntity) {
-        return new DriverResponseDTO(driverEntity.getId(), driverEntity.getName(), driverEntity.getCnhNumber(), 
+        return new DriverResponseDTO(driverEntity.getId(), driverEntity.getUser().getName(), driverEntity.getCnhNumber(), 
         driverEntity.getTripsSinceLastDayOff(), driverEntity.getStatus());
     }
 
     public Driver toEntity(DriverRequestDTO driverDto) {
         Driver driverEntity = Driver.builder()
-        .name(driverDto.name())
         .cnhNumber(driverDto.cnhNumber())
         .build();
 

@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class VehicleController {
     private final VehicleService vehicleService;
 
-    @PreAuthorize("hasAnyRole('ADMIN'")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO request) {
         VehicleResponseDTO response = vehicleService.create(request);

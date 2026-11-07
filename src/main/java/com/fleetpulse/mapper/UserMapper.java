@@ -17,11 +17,12 @@ public class UserMapper {
         return new UserResponseLoginDTO(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), token);
     }
 
-    public User toEntity(UserRegisterRequestDTO userDto) {
+    // a senha chega já com hash (feito no service), nunca em texto puro
+    public User toEntity(UserRegisterRequestDTO userDto, String encodedPassword) {
         User user = User.builder()
         .name(userDto.name())
         .email(userDto.email())
-        .password(userDto.password())
+        .password(encodedPassword)
         .role(userDto.role())
         .build();
 

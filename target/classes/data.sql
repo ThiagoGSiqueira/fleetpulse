@@ -1,17 +1,4 @@
 
--- ==========================================
--- DRIVERS
--- ==========================================
-INSERT INTO drivers (id, name, cnh_number, trips_since_last_day_off, status) VALUES 
-(1, 'Carlos Eduardo Silva', '123456', 1, 'AVAILABLE'),
-(2, 'Mariana Oliveira Santos', '234567', 0, 'AVAILABLE'),
-(3, 'Roberto Almeida Costa', '345678', 2, 'BUSY'),
-(4, 'Ana Paula Ferreira', '456789', 2, 'AVAILABLE'),
-(5, 'João Pedro Machado', '567890', 0, 'AVAILABLE'),
-(6, 'Fernanda Lima Souza', '678901', 1, 'AVAILABLE'),
-(7, 'Ricardo Gomes Pereira', '789012', 5, 'INACTIVE');
-
-SELECT setval('seq_driver', 50, true);
 
 -- ==========================================
 -- VEHICLES
