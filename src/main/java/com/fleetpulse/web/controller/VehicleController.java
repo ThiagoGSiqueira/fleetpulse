@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,42 +23,49 @@ import com.fleetpulse.web.dto.VehicleResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
     private final VehicleService vehicleService;
 
+    @PreAuthorize("hasAnyRole('ADMIN'")
     @PostMapping
     public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO request) {
         VehicleResponseDTO response = vehicleService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    } 
+    }
 
-    @GetMapping 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping
     public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
         List<VehicleResponseDTO> response = vehicleService.findAll();
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Long id) {
         VehicleResponseDTO response = vehicleService.findById(id);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestUpdateDTO request) {
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id,
+            @Valid @RequestBody VehicleRequestUpdateDTO request) {
         VehicleResponseDTO response = vehicleService.update(id, request);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PatchMapping("/{id}/maintenance/finish")
     public ResponseEntity<VehicleResponseDTO> finishMaintenance(@PathVariable Long id) {
         VehicleResponseDTO response = vehicleService.finishMaintenance(id);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
         vehicleService.delete(id);

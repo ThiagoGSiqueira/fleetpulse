@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,62 +26,74 @@ import com.fleetpulse.web.dto.TripResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor 
-@RestController 
+@RequiredArgsConstructor
+@RestController
 @RequestMapping("/trips")
 public class TripController {
     private final TripService tripService;
     private final CreateTripUseCase createTripUseCase;
     private final UpdateTripRouteUseCase updateTripRouteUseCase;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping
     public ResponseEntity<TripResponseDTO> createTrip(@Valid @RequestBody TripRequestDTO request) {
         TripResponseDTO response = createTripUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping
     public ResponseEntity<List<TripResponseDTO>> getAllTrips() {
         List<TripResponseDTO> response = tripService.findAll();
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'DRIVER')")
     @GetMapping("/{id}")
     public ResponseEntity<TripResponseDTO> getTripById(@PathVariable Long id) {
         TripResponseDTO response = tripService.findById(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping ("/{id}/driver")
-    public ResponseEntity<TripResponseDTO> reassignDriver(@PathVariable Long id, @Valid @RequestBody AssignDriverDTO request) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PutMapping("/{id}/driver")
+    public ResponseEntity<TripResponseDTO> reassignDriver(@PathVariable Long id,
+            @Valid @RequestBody AssignDriverDTO request) {
         TripResponseDTO response = tripService.reassignDriver(id, request);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}/vehicle")
-    public ResponseEntity<TripResponseDTO> reassignVehicle(@PathVariable Long id, @Valid @RequestBody AssignVehicleDTO request) {
+    public ResponseEntity<TripResponseDTO> reassignVehicle(@PathVariable Long id,
+            @Valid @RequestBody AssignVehicleDTO request) {
         TripResponseDTO response = tripService.reassignVehicle(id, request);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PatchMapping("/{id}/route")
-    public ResponseEntity<TripResponseDTO> updateRoute(@PathVariable Long id, @Valid @RequestBody TripRequestUpdateDTO request) {
+    public ResponseEntity<TripResponseDTO> updateRoute(@PathVariable Long id,
+            @Valid @RequestBody TripRequestUpdateDTO request) {
         TripResponseDTO response = updateTripRouteUseCase.execute(id, request);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'DRIVER')")
     @PatchMapping("{id}/start")
     public ResponseEntity<TripResponseDTO> startTrip(@PathVariable Long id) {
         TripResponseDTO response = tripService.start(id);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'DRIVER')")
     @PatchMapping("{id}/complete")
     public ResponseEntity<TripResponseDTO> completeTrip(@PathVariable Long id) {
         TripResponseDTO response = tripService.complete(id);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<TripResponseDTO> cancelTrip(@PathVariable Long id) {
         TripResponseDTO response = tripService.cancel(id);
